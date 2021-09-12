@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'getx/controller.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -19,10 +22,17 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
+  final controller = Get.put(TestController());
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Test Page"),
+      child: Column(
+        children: [
+          ElevatedButton(onPressed: controller.addCount, child: Text("Click!")),
+          Obx((){return Text("${controller.count}");}),
+        ],
+      ),
     );
   }
 }
