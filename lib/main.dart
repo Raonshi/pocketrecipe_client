@@ -4,17 +4,20 @@ import 'package:get/get.dart';
 import 'api.dart';
 import 'home.dart';
 
-void main() => runApp(PocketRecipe());
+void main() => runApp(PocketRecipe(false));
 
 
 class PocketRecipe extends StatelessWidget {
-  const PocketRecipe({Key? key}) : super(key: key);
+  final isTest;
+  PocketRecipe(this.isTest);
 
   @override
   Widget build(BuildContext context) {
 
-    API api = new API();
-    api.test();
+    if(isTest == false){
+      API api = new API();
+      api.test();
+    }
 
     return GetMaterialApp(
       title: "Pocket Recipe",
