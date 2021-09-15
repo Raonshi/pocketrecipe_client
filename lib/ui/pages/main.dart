@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pocketrecipe_client/getx/controller.dart';
 
-import 'api.dart';
+import '../../api.dart';
 import 'home.dart';
 
 void main() => runApp(PocketRecipe(false));
@@ -13,12 +14,6 @@ class PocketRecipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    if(isTest == false){
-      API api = new API();
-      api.test();
-    }
-
     return GetMaterialApp(
       title: "Pocket Recipe",
       home: Scaffold(

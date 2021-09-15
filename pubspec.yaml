@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.3.8
   http: ^0.13.3
+  logger: ^1.1.0
+  sprintf: ^6.0.0
 
 dev_dependencies:
   flutter_test:

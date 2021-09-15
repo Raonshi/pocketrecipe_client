@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:logger/logger.dart';
+
 class API{
 
   final _endpoint = 'openapi.foodsafetykorea.go.kr';
@@ -19,6 +21,8 @@ class API{
   Future<dynamic> getRecipeByName(String recipeName) async{
     final option = '/api/' + _key + '/' + _service + '/' + _type + '/' + _start + '/' + _end + '/RCP_NM=' + recipeName;
     Uri uri = Uri.http(_endpoint, option);
+
+    Logger().d("LINK : $uri");
 
     var response = await http.get(uri);
 
