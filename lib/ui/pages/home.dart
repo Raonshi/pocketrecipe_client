@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
 import '../../getx/controller.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return HomeWidget();
@@ -15,8 +14,6 @@ class Home extends StatelessWidget {
 
 
 class HomeWidget extends StatefulWidget {
-  const HomeWidget({Key? key}) : super(key: key);
-
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
 }
@@ -65,13 +62,15 @@ class _HomeWidgetState extends State<HomeWidget> {
             ],
           ),
 
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Obx(()=>Text("${controller.recipeList[0].name}")),
-              ),
-            ],
+          Obx(() => Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: controller.recipeList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return RecipeItem(controller.recipeList[index]);
+                }),
+          ),
           ),
         ],
       ),

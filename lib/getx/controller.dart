@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/api.dart';
-import 'package:pocketrecipe_client/ui/pages/main.dart';
 import 'package:sprintf/sprintf.dart';
 
 class APIController extends GetxController{
@@ -63,34 +62,4 @@ class Recipe{
       this.energy, this.carbohydrate, this.protein, this.fat, this.natrium,
       this.manuaList, this.imageList
       );
-
-  Recipe.init(dynamic item){
-    //기본 정보
-    name = item['RCP_NM'];
-    recipeImg = item['ATT_FILE_NO_MAIN'];
-    parts = item['RCP_PARTS_DTLS'];
-
-    //영양정보
-    energy = item['INFO_ENG'];
-    protein = item['INFO_PRO'];
-    fat = item['INFO_FAT'];
-    natrium = item['INFO_NA'];
-    carbohydrate = item['INFO_CAR'];
-
-    //세부 내용
-    for(int i = 1; i <= 20; i++){
-      String str = item['MANUAL${sprintf("%02d", [i])}'];
-
-      if(str == ""){continue;}
-      manuaList.add(str);
-    }
-
-    for(int i = 1; i <= 20; i++){
-      String str = item['MANUAL_IMG${sprintf("%02d", [i])}'];
-
-      if(str == ""){continue;}
-      imageList.add(str);
-    }
-  }
-
 }

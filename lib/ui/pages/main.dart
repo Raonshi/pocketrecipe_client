@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/getx/controller.dart';
-
-import '../../api.dart';
+import 'package:pocketrecipe_client/api.dart';
 import 'home.dart';
 
 void main() => runApp(PocketRecipe(false));
@@ -11,6 +9,8 @@ void main() => runApp(PocketRecipe(false));
 class PocketRecipe extends StatelessWidget {
   final isTest;
   PocketRecipe(this.isTest);
+
+
 
   @override
   Widget build(BuildContext context) {
