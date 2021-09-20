@@ -9,7 +9,10 @@ class API{
   final _endpoint = 'openapi.foodsafetykorea.go.kr';
   final _key = '26ad987100ed4b05baf0';
   final _service = 'COOKRCP01';
-  final _type = 'testing_data.json';
+
+  //final _type = 'testing_data.json';
+  final _type = 'json';
+
   final _start = '1';
   final _end = '5';
 
@@ -35,6 +38,7 @@ class API{
 
     if(response.statusCode != 200){
       print("Http Get Failed : ${response.statusCode}");
+      return;
     }
 
     var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
