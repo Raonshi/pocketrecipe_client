@@ -43,6 +43,13 @@ class APIController extends GetxController{
   }
 }
 
+class Controller extends GetxController{
+  RxInt centerPageSelect = 1.obs;
+
+}
+
+
+
 class Recipe{
   String name = '';
   String recipeImg = '';

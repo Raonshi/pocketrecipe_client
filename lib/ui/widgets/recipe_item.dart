@@ -15,35 +15,26 @@ class RecipeItem extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      width: 150,
-      height: 160,
-      child: ElevatedButton(
-        onPressed: (){
-          Get.to(RecipePage(recipe));
-        },
-        style: ElevatedButton.styleFrom(
-          primary: Color.fromARGB(0, 255, 255, 255)
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.network("${recipe.recipeImg}", width: 150, height: 120,),
-              ],
+      width: 300,
+      height: 300,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 4,
+            child: InkWell(
+              onTap: (){
+                Get.to(RecipePage(recipe));
+              },
+              child: Image.network("${recipe.recipeImg}"),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3.0),
-                  child: Text(recipe.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+
+          Expanded(
+            flex: 1,
+            child: Text(recipe.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+          ),
+        ],
       ),
     );
   }
