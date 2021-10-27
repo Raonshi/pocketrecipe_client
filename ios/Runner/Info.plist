@@ -41,5 +41,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+        <string>${PRODUCT_NAME} Camera Usage</string>
 </dict>
 </plist>

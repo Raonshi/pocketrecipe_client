@@ -5,7 +5,7 @@ import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:get/get.dart';
 
 
-
+/*
 class ManualItem extends StatefulWidget {
   int index = 0;
   ManualItem({Key? key, required index}) : super(key: key);
@@ -127,16 +127,21 @@ class _ManualItemState extends State<ManualItem> {
     );
   }
 }
+*/
 
-/*
+
+
+
 class ManualItem extends StatelessWidget {
   int index = 0;
   TextEditingController controller = TextEditingController();
   final getController = Get.put(APIController());
+  String manual = "";
+  XFile? image;
 
   dynamic uploadImage;
 
-  ManualItem({Key? key, required index}) : super(key : key);
+  ManualItem({Key? key, required index, manual, image}) : super(key : key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +161,8 @@ class ManualItem extends StatelessWidget {
                 onChanged: (str){
                   controller..text = str
                     ..selection = TextSelection.collapsed(offset: controller.text.length);
+
+                  manual = controller.text;
                 }
             ),
           ),
@@ -195,6 +202,9 @@ class ManualItem extends StatelessWidget {
                   onPressed: () async {
                     ImagePicker picker = ImagePicker();
                     uploadImage = await picker.pickImage(source: ImageSource.camera);
+
+                    image = uploadImage;
+
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -206,8 +216,9 @@ class ManualItem extends StatelessWidget {
                 Expanded(child: IconButton(
                   onPressed: () async {
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.gallery);
-                    controller.imageFileList.value.add(file);
+                    uploadImage = await picker.pickImage(source: ImageSource.gallery);
+
+                    image = uploadImage;
 
                     Navigator.pop(context);
                   },
@@ -229,4 +240,3 @@ class ManualItem extends StatelessWidget {
     );
   }
 }
-*/

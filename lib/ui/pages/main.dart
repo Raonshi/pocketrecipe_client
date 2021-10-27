@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/api.dart';
+import 'package:logger/logger.dart';
 import 'home.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(PocketRecipe(false));
 
@@ -9,8 +10,6 @@ void main() => runApp(PocketRecipe(false));
 class PocketRecipe extends StatelessWidget {
   final isTest;
   PocketRecipe(this.isTest);
-
-
 
   @override
   Widget build(BuildContext context) {
