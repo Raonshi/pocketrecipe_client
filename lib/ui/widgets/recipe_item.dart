@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/ui/pages/recipe_page.dart';
+import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
+
 
 class RecipeItem extends StatelessWidget {
   Recipe recipe;
   RecipeItem(this.recipe);
+
+  Icon favorite = Icon(Icons.favorite_border_rounded);
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,7 @@ class RecipeItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          //레시피 이미지
           Expanded(
             flex: 4,
             child: InkWell(
@@ -30,9 +34,27 @@ class RecipeItem extends StatelessWidget {
             ),
           ),
 
+          //레시피 이름
           Expanded(
             flex: 1,
-            child: Text(recipe.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                    flex : 1,
+                    child: Text(recipe.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
+                ),
+
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                      onPressed: (){
+                      },
+                      icon: favorite),
+                )
+              ],
+            ),
           ),
         ],
       ),

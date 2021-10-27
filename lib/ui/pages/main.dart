@@ -19,6 +19,7 @@ class PocketRecipe extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text("포켓레시피", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),),
         body: Home(),
+        resizeToAvoidBottomInset: false,
       ),
     );
   }

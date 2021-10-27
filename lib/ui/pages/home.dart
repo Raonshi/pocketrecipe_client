@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/ui/pages/community_page.dart';
-import 'package:pocketrecipe_client/ui/pages/recipe_page.dart';
-import 'package:pocketrecipe_client/ui/pages/setting_page.dart';
+import 'package:pocketrecipe_client/ui/pages/community/community_page.dart';
+import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
+import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
 import '../../getx/controller.dart';
@@ -30,12 +30,12 @@ class _HomeWidgetState extends State<HomeWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            flex:9,
+            flex:20,
             child: Obx(() => centerPage()),
           ),
 
           Expanded(
-            flex:1,
+            flex:2,
             child:Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -56,6 +56,8 @@ class _HomeWidgetState extends State<HomeWidget> {
               ],
             ),
           ),
+
+          Spacer(),
         ],
       ),
     );

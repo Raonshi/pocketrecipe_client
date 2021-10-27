@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
-import 'home.dart';
+import '../home.dart';
 
 
 class RecipeSearch extends StatelessWidget {
@@ -33,7 +33,7 @@ class RecipeSearch extends StatelessWidget {
                           hintText: "요리명 / 요리재료"
                       ),
                       onSubmitted: (str) {
-                        controller.getRecipeByName(textEditingController.text);
+                        controller.getRecipeByKeyword(textEditingController.text);
                       },
                     ),
                   ),
@@ -42,11 +42,11 @@ class RecipeSearch extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ElevatedButton(
                       onPressed: () {
-                        controller.getRecipeByName(textEditingController.text);
+                        controller.getRecipeByKeyword(textEditingController.text);
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Text("검색!"),
+                        child: Text("검색"),
                       )),
                 ),
               ],
