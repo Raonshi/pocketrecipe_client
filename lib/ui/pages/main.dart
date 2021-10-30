@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'home.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(PocketRecipe(false));
 

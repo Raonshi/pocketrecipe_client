@@ -7,7 +7,7 @@ import '../home.dart';
 
 
 class RecipeSearch extends StatelessWidget {
-  final controller = Get.put(APIController());
+  final controller = Get.put(Controller());
   TextEditingController textEditingController = TextEditingController();
 
   @override

@@ -5,10 +5,19 @@ import 'dart:convert' as convert;
 
 import 'package:logger/logger.dart';
 
+import 'getx/controller.dart';
+
 class API{
+  //공공데이터 정보
   final _endpoint = 'openapi.foodsafetykorea.go.kr';
   final _key = '26ad987100ed4b05baf0';
   final _service = 'COOKRCP01';
+
+  //데이터베이스 서버 정보 - 테스트
+  final _testDbServer = "192.168.0.2:8080";
+
+  //데이터베이스 서버 정보 - 라이브
+  final _dbSever = "220.86.224.184:12010";
 
   //final _type = 'testing_data.json';
   final _type = 'json';
@@ -49,13 +58,11 @@ class API{
 
   ///서버의 데이터베이스에서 결과를 조회한다.
   Future<dynamic> getRecipeByDatabase(String keyword) async {
-    String server = "127.0.0.1:8080";
-    String service = "/searchRecipe";
     dynamic params = {
       "keyword" : keyword
     };
 
-    Uri uri = Uri.http(server,service, params);
+    Uri uri = Uri.http(_testDbServer,"searchRecipe", params);
 
     Logger().d("LINK : $uri");
 
@@ -74,6 +81,30 @@ class API{
   }
 
 
+
+  Future<bool> insertRecipe(Recipe recipe) async {
+    Uri uri = Uri.http("10.0.2.2:8080", "/insertRecipe");
+    Logger().d("LINK : $uri");
+
+    var response = await http.post(
+      uri,
+      headers: {"Content-Type": "application/json"},
+      body: convert.json.encode(recipe.toJson("admin")),
+    );
+
+    if(response.statusCode != 200){
+      Logger().d("REST API (POST) Failed : ${response.statusCode}");
+      return false;
+    }
+    else{
+      if(response.body == "Success"){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
 
 
 //#region 테스트환경 json코드

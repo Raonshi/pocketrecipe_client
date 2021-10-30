@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pocketrecipe_client/ui/pages/community/community_page.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
 import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
@@ -13,39 +12,7 @@ class Home extends StatelessWidget {
   bool? permissionStatus;
   @override
   Widget build(BuildContext context) {
-    permission(context);
-
     return HomeWidget();
-  }
-
-  void permission(BuildContext context) async {
-    permissionStatus = await permissionRequest(context);
-  }
-
-  Future<bool> permissionRequest(BuildContext context) async {
-    var cameraPermission = await Permission.camera.request();
-    var photoPermission = await Permission.photos.request();
-
-    Logger().d(cameraPermission);
-    Logger().d(photoPermission);
-
-
-    if (!cameraPermission.isGranted || !photoPermission.isGranted) {
-      showDialog(context: context, builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("권한 설정"),
-          content: Text("다음 권한이 미설정 되어 있습니다.\n [카메라] \n [갤러리] \n 권한을 설정해주세요."),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context), child: Text("닫기"),),
-            ElevatedButton(
-              onPressed: () => openAppSettings(), child: Text("설정 이동"),),
-          ],
-        );
-      });
-      return false;
-    }
-    return true;
   }
 }
 

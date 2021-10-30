@@ -1,15 +1,28 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/api.dart';
 import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
 import 'package:sprintf/sprintf.dart';
 
-class APIController extends GetxController{
+class Controller extends GetxController{
   API api = new API();
   var recipeList = <Recipe>[].obs;
   Rx<Recipe> recipe = Recipe().obs;
+  RxInt centerPageSelect = 1.obs;
   RxList imageFileList = [].obs;
+  RxList manualList = <ManualItem>[].obs;
 
+  void manualAdd(){
+    manualList.add(ManualItem(index: manualList.length-1));
+  }
+
+  void manualSub(){
+    manualList.removeLast();
+  }
 
   void generateRecipe() => this.recipe = new Recipe().obs;
 
@@ -48,10 +61,11 @@ class APIController extends GetxController{
           protein: item['INFO_PRO'],
           fat: item['INFO_FAT'],
           natrium: item['INFO_NA'],
-          manualList: tmpManualList,
-          imageList: tmpImgList,
           isFavorite: 0,
         );
+
+        recipe.manualList = tmpManualList;
+        recipe.imageList = tmpImgList;
 
         recipeList.add(recipe);
       }
@@ -80,18 +94,19 @@ class APIController extends GetxController{
         }
 
         Recipe recipe = Recipe(
-            name: item['RCP_NM'],
-            recipeImg: item['ATT_FILE_NO_MAIN'],
+            name: item['recipe_name'],
+            recipeImg: item['recipe_image'],
             parts: item['RCP_PARTS_DTLS'],
             energy: item['INFO_ENG'],
             carbohydrate: item['INFO_CAR'],
             protein: item['INFO_PRO'],
             fat: item['INFO_FAT'],
             natrium: item['INFO_NA'],
-            manualList: tmpManualList,
-            imageList: tmpImgList,
             isFavorite: 0,
         );
+
+        recipe.manualList = tmpManualList;
+        recipe.imageList = tmpImgList;
 
         recipeList.add(recipe);
       }
@@ -100,23 +115,63 @@ class APIController extends GetxController{
     Logger().d("${recipeList[0].name}");
   }
 
+  ///카메라를 통한 이미지 로드
+  void encodeImageFromCamera() async {
+    ImagePicker picker = ImagePicker();
+    XFile? xFile = await picker.pickImage(source: ImageSource.camera);
+    recipe.value.recipeImg = await imageToBase64(xFile: xFile);
+  }
 
-  void recipePosting(Recipe recipe, List<ManualItem> manualList) async {
-    Logger().d("test");
+  ///갤러리를 통한 이미지 로드
+  void encodeImageFromGallery() async {
+    ImagePicker picker = ImagePicker();
+    XFile? xFile = await picker.pickImage(source: ImageSource.gallery);
+    recipe.value.recipeImg = await imageToBase64(xFile: xFile);
+  }
+
+
+  ///레시피 등록
+  Future<bool> recipePosting() async {
+    recipePackaging();
+
+    recipe.value.recipeImg = await imageToBase64();
+
+    Logger().d("Name : ${recipe.value.name}");
+
+    bool isComplete = await api.insertRecipe(recipe.value);
+    return isComplete;
+  }
+
+  ///레시피 정보 패키징
+  void recipePackaging() async {
+    for(int i = 0; i < manualList.length; i++){
+      ManualItem item = manualList.value[i];
+      item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
+      recipe.value.imageList.add(await imageToBase64(xFile: item.image));
+    }
+  }
+
+  ///이미지 파일을 base64코드로 변환
+  Future<String> imageToBase64({XFile? xFile}) async {
+    //이미지가 없을 경우
+    if(xFile == null){
+      ByteData file = await rootBundle.load("data/warning.jpeg");
+      final buffer = file.buffer;
+      var list = buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
+      return base64.encode(list);
+    }
+    //이미지가 있을 경우
+    else{
+      File file = new File(xFile.path);
+      return base64.encode(file.readAsBytesSync());
+    }
   }
 }
 
 
-
-class Controller extends GetxController{
-  RxInt centerPageSelect = 1.obs;
-}
-
-
-
 class Recipe{
   String name = '';
-  dynamic recipeImg;
+  String recipeImg;
   String parts = '';
 
   String energy = '';
@@ -125,17 +180,17 @@ class Recipe{
   String fat = '';
   String protein = '';
 
-  List<dynamic>? imageList = List.generate(20, (index) => dynamic);
-  List<String>? manualList = List.generate(20, (index) => '');
+  List<dynamic> imageList = [];
+  List<dynamic> manualList = [];
 
   //0 : 공공데이터 -> 좋아요 없음
   //1 : 좋아요 눌림
   //2 : 좋아요 안눌림
   int isFavorite;
 
-  Recipe({this.name='', this.recipeImg, this.parts='',
+  Recipe({this.name='', this.recipeImg='', this.parts='',
     this.energy='', this.carbohydrate='', this.protein='', this.fat='', this.natrium='',
-    this.manualList, this.imageList, this.isFavorite=0});
+    this.isFavorite=0});
 
   void setName(String value) => this.name = value;
   void setImage(String value) => this.recipeImg = value;
@@ -145,4 +200,21 @@ class Recipe{
   void setPro(String value) => this.protein = value;
   void setFat(String value) => this.fat = value;
   void setNa(String value) => this.natrium = value;
+
+
+  Map<String, dynamic> toJson(String author){
+    return {
+      "recipe_name" : name,
+      "recipe_image" : recipeImg,
+      "recipe_parts" : parts,
+      "recipe_energy" : energy,
+      "recipe_cal" : carbohydrate,
+      "recipe_pro" : protein,
+      "recipe_fat" : fat,
+      "recipe_nat" : natrium,
+      "recipe_manual" : manualList,
+      "recipe_manual_image" : imageList,
+      "recipe_author" : author,
+    };
+  }
 }

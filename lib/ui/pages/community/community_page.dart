@@ -1,14 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
-import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
+import 'package:pocketrecipe_client/ui/pages/home.dart';
+import 'package:pocketrecipe_client/ui/pages/main.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
 
 class CommunityPage extends StatelessWidget {
-  final controller = Get.put(APIController());
+  final controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +32,13 @@ class CommunityPage extends StatelessWidget {
         ),
 
         //글쓰기 버튼
-        FloatingActionButton(child: Icon(Icons.add_rounded), onPressed: (){
-          Get.to(() => RecipePost());
-        })
+        FloatingActionButton(
+          child: Icon(Icons.add_rounded),
+          onPressed: (){
+            controller.recipe.value = new Recipe();
+            Get.to(() => RecipePost());
+          },
+        ),
       ],
     );
   }
@@ -39,7 +46,7 @@ class CommunityPage extends StatelessWidget {
 
 
 class RecipePost extends StatelessWidget {
-  final controller = Get.put(APIController());
+  final controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +83,7 @@ class RecipePost extends StatelessWidget {
           ),
 
           //완성 이미지 업로드
+          // -> 이미지 업로드시 아이콘이 변경되야함(현재 안됨)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -200,11 +208,12 @@ class RecipePost extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               ElevatedButton(
-                onPressed: (){
+                onPressed: () async {
                   Logger().d("Name : ${controller.recipe.value.name}");
                   Logger().d("Energy : ${controller.recipe.value.energy}");
 
-                  Get.to(() => RecipePost2());
+                  bool goToHome = await Get.to(() => RecipePost2());
+                  if(goToHome){Get.back();}
                 },
                 child: Text("다음"),
               ),
@@ -227,8 +236,7 @@ class RecipePost extends StatelessWidget {
               children: [
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    ImagePicker picker = ImagePicker();
-                    controller.recipe.value.recipeImg = await picker.pickImage(source: ImageSource.camera);
+                    controller.encodeImageFromCamera();
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -239,8 +247,7 @@ class RecipePost extends StatelessWidget {
 
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    ImagePicker picker = ImagePicker();
-                    controller.recipe.value.recipeImg = await picker.pickImage(source: ImageSource.gallery);
+                    controller.encodeImageFromGallery();
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -260,238 +267,20 @@ class RecipePost extends StatelessWidget {
       },
     );
   }
-
-
-
 }
 
 
-/*
-class RecipePost extends StatefulWidget {
+class RecipePost2 extends StatelessWidget {
+  //final controller = Get.put(APIController());
+  final controller = Get.put(Controller());
 
-  @override
-  _RecipePostState createState() => _RecipePostState();
-}
-
-class _RecipePostState extends State<RecipePost> {
-  final controller = Get.put(APIController());
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    controller.recipe.value = new Recipe();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("레시피 등록"),
-      ),
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          //레시피 이름
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "레시피 이름",
-                      border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setName(str);
-                    }
-                  ),
-                ),
-              )
-            ],
-          ),
-
-          //완성 이미지 업로드
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              IconButton(
-                onPressed: (){},
-                iconSize: 150.0,
-                icon: Icon(Icons.image_rounded),
-                tooltip: "이미지 업로드",
-              ),
-            ],
-          ),
-
-          //레시피 칼로리, 나트륨
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "칼로리(kcal)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setEnergy(str);
-                    }
-                  ),
-                ),
-              ),
-
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "나트륨(mg)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setNa(str);
-                    }
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          //탄수화물
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "탄수화물(g)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setCal(str);
-                    }
-                  ),
-                ),
-              )
-            ],
-          ),
-
-          //지방
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "지방(g)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setFat(str);
-                    }
-                  ),
-                ),
-              )
-            ],
-          ),
-
-          //단백질
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "단백질(g)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setPro(str);
-                    }
-                  ),
-                ),
-              )
-            ],
-          ),
-
-          //다음 버튼
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              ElevatedButton(
-                onPressed: (){
-                  Logger().d("Name : ${controller.recipe.value.name}");
-                  Logger().d("Energy : ${controller.recipe.value.energy}");
-
-                  Get.to(() => RecipePost2());
-                },
-                child: Text("다음"),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /*
-  void getRecipeFailDialog(){
-    showDialog(context: context, builder: (BuildContext context){
-      return AlertDialog(
-        title: Text("경고"),
-        content: Text("레시피 정보가 올바르지 않습니다."),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("닫기"),
-          )
-        ],
-      );
-    });
-  }
-   */
-}
-*/
-
-class RecipePost2 extends StatefulWidget {
-  @override
-  _RecipePost2State createState() => _RecipePost2State();
-}
-
-class _RecipePost2State extends State<RecipePost2> {
-  final controller = Get.put(APIController());
-
-  List<ManualItem> manualList = [];
+  //List<ManualItem> manualList = [];
   List<XFile> imageList = [];
 
-  _RecipePost2State();
-
   @override
   Widget build(BuildContext context) {
-    manualList.add(ManualItem(index: 0, manual: controller.recipe.value.manualList![0], image: controller.recipe.value.imageList![0]));
-    manualList.add(ManualItem(index: 1, manual: controller.recipe.value.manualList![1], image: controller.recipe.value.imageList![1]));
+    controller.manualAdd();
+    controller.manualAdd();
 
     return Scaffold(
       appBar: AppBar(title: Text("레시피 등록"),),
@@ -500,18 +289,16 @@ class _RecipePost2State extends State<RecipePost2> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-
-          //에러 발생함
-          //배열 길이가 0으로 인식됨
           Expanded(
             flex: 14,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: manualList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return manualList[index];
-                }),
+            child: Obx(() => ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: controller.manualList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return controller.manualList[index];
+              }),
+            ),
           ),
 
           Divider(),
@@ -528,10 +315,8 @@ class _RecipePost2State extends State<RecipePost2> {
                   flex: 4,
                   child: ElevatedButton(
                     onPressed: (){
-                      if(manualList.length < 20){
-                        setState(() {
-                          manualList.add(ManualItem(index: manualList.length, manual: controller.recipe.value.manualList![manualList.length], image: controller.recipe.value.imageList![manualList.length]));
-                        });
+                      if(controller.manualList.length < 20){
+                        controller.manualAdd();
                       }
                       else{
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -555,10 +340,8 @@ class _RecipePost2State extends State<RecipePost2> {
                   flex: 4,
                   child: ElevatedButton(
                     onPressed: (){
-                      if(manualList.length > 1){
-                        setState(() {
-                          manualList.removeAt(manualList.length-1);
-                        });
+                      if(controller.manualList.length > 1){
+                        controller.manualSub();
                       }
                       else{
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -586,11 +369,42 @@ class _RecipePost2State extends State<RecipePost2> {
           Expanded(
             flex: 2,
             child: ElevatedButton(
-              onPressed: (){
+              onPressed: () async{
                 Logger().d("등록");
-
                 //레시피 등록 절차 수행
-                controller.recipePosting(controller.recipe.value, manualList);
+                bool isComplete = await controller.recipePosting();
+                bool goToHome = false;
+
+                if(isComplete){
+                   goToHome = await showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(
+                      title: Text("알림"),
+                      content: Text("레시피 등록이 완료되었습니다."),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text("닫기"),
+                        ),
+                      ],
+                    );
+                  });
+                }
+                else{
+                  goToHome = await showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(
+                      title: Text("알림"),
+                      content: Text("레시피 등록이 실패하였습니다.\n 관리자에게 문의해주세요."),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text("닫기"),
+                        ),
+                      ],
+                    );
+                  });
+                }
+
+                if(goToHome){Get.back(result: true);}
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
