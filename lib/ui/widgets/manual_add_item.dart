@@ -76,11 +76,7 @@ class ManualItem extends StatelessWidget {
               children: [
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    ImagePicker picker = ImagePicker();
-                    uploadImage = await picker.pickImage(source: ImageSource.camera);
-
-                    image = uploadImage;
-
+                    controller.encodeImageFromCamera();
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -91,11 +87,7 @@ class ManualItem extends StatelessWidget {
 
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    ImagePicker picker = ImagePicker();
-                    uploadImage = await picker.pickImage(source: ImageSource.gallery);
-
-                    image = uploadImage;
-
+                    controller.encodeImageFromGallery();
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,

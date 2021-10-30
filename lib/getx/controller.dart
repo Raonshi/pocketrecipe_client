@@ -13,7 +13,6 @@ class Controller extends GetxController{
   var recipeList = <Recipe>[].obs;
   Rx<Recipe> recipe = Recipe().obs;
   RxInt centerPageSelect = 1.obs;
-  RxList imageFileList = [].obs;
   RxList manualList = <ManualItem>[].obs;
 
   void manualAdd(){
@@ -133,10 +132,7 @@ class Controller extends GetxController{
   ///레시피 등록
   Future<bool> recipePosting() async {
     recipePackaging();
-
     recipe.value.recipeImg = await imageToBase64();
-
-    Logger().d("Name : ${recipe.value.name}");
 
     bool isComplete = await api.insertRecipe(recipe.value);
     return isComplete;
@@ -144,10 +140,19 @@ class Controller extends GetxController{
 
   ///레시피 정보 패키징
   void recipePackaging() async {
-    for(int i = 0; i < manualList.length; i++){
-      ManualItem item = manualList.value[i];
-      item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
-      recipe.value.imageList.add(await imageToBase64(xFile: item.image));
+    for(int i = 0; i < 20; i++){
+
+      if(i < manualList.length){
+        ManualItem item = manualList.value[i];
+
+        item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
+        recipe.value.imageList.add(await imageToBase64(xFile: item.image));
+      }
+      else{
+        recipe.value.manualList.add('');
+        recipe.value.imageList.add(await imageToBase64());
+      }
+
     }
   }
 
