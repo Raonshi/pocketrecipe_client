@@ -9,7 +9,7 @@ class ManualItem extends StatelessWidget {
   TextEditingController controller = TextEditingController();
   final getController = Get.put(Controller());
   String manual = "";
-  XFile? image;
+  XFile? image = null;
 
   dynamic uploadImage;
 

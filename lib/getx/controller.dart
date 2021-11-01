@@ -71,7 +71,7 @@ class Controller extends GetxController{
     }
 
 
-    //데이터베이스데서 결과를 가져온다.
+    //데이터베이스에서 결과를 가져온다.
     List<dynamic> dbResult = await api.getRecipeByDatabase(str);
 
     if(dbResult.length > 0){
@@ -128,7 +128,7 @@ class Controller extends GetxController{
 
   ///레시피 등록
   Future<bool> recipePosting() async {
-    recipePackaging();
+    await recipePackaging();
     recipe.value.recipeImg = await imageToBase64();
 
     bool isComplete = await api.insertRecipe(recipe.value);
@@ -136,7 +136,7 @@ class Controller extends GetxController{
   }
 
   ///레시피 정보 패키징
-  void recipePackaging() async {
+  Future<void> recipePackaging() async {
     for(int i = 0; i < 20; i++){
 
       if(i < manualList.length){
@@ -222,9 +222,10 @@ class Recipe{
   }
 
   factory Recipe.fromJson(dynamic json){
+    String imagePath = "http://10.0.2.2:8080/image/view?filePath=";
     return Recipe(
       name: json["recipe_name"] as String,
-      recipeImg: json['recipe_image'] as String,
+      recipeImg: imagePath + json['recipe_image'] as String,
       parts: "",
       energy: json['recipe_eng'].toString(),
       carbohydrate: json['recipe_cal'].toString(),
