@@ -15,7 +15,7 @@ class API{
   final _service = 'COOKRCP01';
 
   //데이터베이스 서버 정보 - 테스트
-  final _testDbServer = "192.168.0.2:8080";
+  final _testDbServer = "10.0.2.2:8080";
 
   //데이터베이스 서버 정보 - 라이브
   final _dbSever = "220.86.224.184:12010";
@@ -42,18 +42,16 @@ class API{
     
     final option = '/api/' + _key + '/' + _service + '/' + _type + '/' + _start + '/' + _end + '/RCP_NM=' + recipeName;
     Uri uri = Uri.http(_endpoint, option);
-
     Logger().d("LINK : $uri");
 
     var response = await http.get(uri);
-
     if(response.statusCode != 200){
-      print("Http Get Failed : ${response.statusCode}");
+      Logger().d("Http Get Failed : ${response.statusCode}");
       return;
     }
 
-    var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
-
+    var utf8Data = utf8.decode(response.bodyBytes);
+    var jsonResponse = convert.jsonDecode(utf8Data) as Map<String, dynamic>;
     return jsonResponse['COOKRCP01'];
   }
 
@@ -64,28 +62,25 @@ class API{
     };
 
     Uri uri = Uri.http(_testDbServer,"searchRecipe", params);
-
     Logger().d("LINK : $uri");
 
     var response = await http.get(uri);
-
     if(response.statusCode != 200){
-      print("Http Get Failed : ${response.statusCode}");
+      Logger().d("Http Get Failed : ${response.statusCode}");
       return;
     }
 
-    Logger().d(response.body);
-
-    var jsonResponse = jsonDecode(response.body) as List;
+    var utf8Decode = utf8.decode(response.bodyBytes);
+    var jsonResponse = jsonDecode(utf8Decode) as List;
     List list = jsonResponse.map((e) => Recipe.fromJson(e)).toList();
 
     return list;
   }
 
 
-
+  ///데이터베이스 서버에 레시피 정보를 저장한다.
   Future<bool> insertRecipe(Recipe recipe) async {
-    Uri uri = Uri.http("10.0.2.2:8080", "/insertRecipe");
+    Uri uri = Uri.http(_testDbServer, "/insertRecipe");
     Logger().d("LINK : $uri");
 
     var response = await http.post(
@@ -96,6 +91,31 @@ class API{
 
     if(response.statusCode != 200){
       Logger().d("REST API (POST) Failed : ${response.statusCode}");
+      return false;
+    }
+    else{
+      if(response.body == "Success"){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
+
+  ///사용자가 선택한 레시피 정보를 매개변수로 전달하여 서버의 레시피를 제거한다.
+  Future<bool> deleteRecipe(Recipe recipe) async {
+    Uri uri = Uri.http(_testDbServer, "/deleteRecipe");
+    Logger().d("LINK : $uri");
+
+    var response = await http.delete(
+      uri,
+      body: recipe,
+    );
+
+    if(response.statusCode != 200){
+      Logger().d("REST API (DELETE) Failed : ${response.statusCode}");
       return false;
     }
     else{
