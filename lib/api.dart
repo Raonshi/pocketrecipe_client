@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -75,9 +76,10 @@ class API{
 
     Logger().d(response.body);
 
-    var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+    var jsonResponse = jsonDecode(response.body) as List;
+    List list = jsonResponse.map((e) => Recipe.fromJson(e)).toList();
 
-    return jsonResponse['COOKRCP01'];
+    return list;
   }
 
 

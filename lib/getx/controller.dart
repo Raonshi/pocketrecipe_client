@@ -33,7 +33,7 @@ class Controller extends GetxController{
     //먼저 공공데이터에서 결과를 가져온다.
     dynamic result = await api.getRecipeByKeyword(str);
 
-    if(result.length > 0){
+    if(int.parse(result['total_count']) != 0){
       for(int i = 0; i < result['row'].length; i++){
         dynamic item = result['row'][i];
 
@@ -72,47 +72,43 @@ class Controller extends GetxController{
 
 
     //데이터베이스데서 결과를 가져온다.
-    dynamic dbResult = await api.getRecipeByDatabase(str);
+    List<dynamic> dbResult = await api.getRecipeByDatabase(str);
 
     if(dbResult.length > 0){
-      for(int i = 0; i < dbResult['row'].length; i++){
-        dynamic item = dbResult['row'][i];
+      for(int i = 0; i < dbResult.length; i++){
+        Recipe item = dbResult[i] as Recipe;
 
         List<String> tmpManualList = [];
-        for(int i = 1; i <= 20; i++){
-          String str = item['MANUAL${sprintf("%02d", [i])}'];
+
+        int j = 0;
+        while(item.manualList.isNotEmpty && j < 20){
+          String str = item.manualList[i];
           if(str == ""){continue;}
           tmpManualList.add(str);
+
+          j++;
         }
 
         List<String> tmpImgList = [];
-        for(int i = 1; i <= 20; i++){
-          String str = item['MANUAL_IMG${sprintf("%02d", [i])}'];
+        int k = 0;
+        while(item.imageList.isNotEmpty && k < 20){
+          String str = item.imageList[i];
           if(str == ""){continue;}
           tmpImgList.add(str);
+
+          k++;
         }
 
-        Recipe recipe = Recipe(
-            name: item['recipe_name'],
-            recipeImg: item['recipe_image'],
-            parts: item['RCP_PARTS_DTLS'],
-            energy: item['INFO_ENG'],
-            carbohydrate: item['INFO_CAR'],
-            protein: item['INFO_PRO'],
-            fat: item['INFO_FAT'],
-            natrium: item['INFO_NA'],
-            isFavorite: 0,
-        );
+        item.manualList = tmpManualList;
+        item.imageList = tmpImgList;
 
-        recipe.manualList = tmpManualList;
-        recipe.imageList = tmpImgList;
-
-        recipeList.add(recipe);
+        recipeList.add(item);
       }
     }
 
     Logger().d("${recipeList[0].name}");
   }
+
 
   ///카메라를 통한 이미지 로드
   void encodeImageFromCamera() async {
@@ -120,6 +116,7 @@ class Controller extends GetxController{
     XFile? xFile = await picker.pickImage(source: ImageSource.camera);
     recipe.value.recipeImg = await imageToBase64(xFile: xFile);
   }
+
 
   ///갤러리를 통한 이미지 로드
   void encodeImageFromGallery() async {
@@ -184,6 +181,7 @@ class Recipe{
   String carbohydrate = '';
   String fat = '';
   String protein = '';
+  String author = '';
 
   List<dynamic> imageList = [];
   List<dynamic> manualList = [];
@@ -195,7 +193,7 @@ class Recipe{
 
   Recipe({this.name='', this.recipeImg='', this.parts='',
     this.energy='', this.carbohydrate='', this.protein='', this.fat='', this.natrium='',
-    this.isFavorite=0});
+    this.author='', this.isFavorite=0});
 
   void setName(String value) => this.name = value;
   void setImage(String value) => this.recipeImg = value;
@@ -221,5 +219,19 @@ class Recipe{
       "recipe_manual_image" : imageList,
       "recipe_author" : author,
     };
+  }
+
+  factory Recipe.fromJson(dynamic json){
+    return Recipe(
+      name: json["recipe_name"] as String,
+      recipeImg: json['recipe_image'] as String,
+      parts: "",
+      energy: json['recipe_eng'].toString(),
+      carbohydrate: json['recipe_cal'].toString(),
+      protein: json['recipe_pro'].toString(),
+      fat: json['recipe_fat'].toString(),
+      natrium: json['recipe_nat'].toString(),
+      author: json['recipe_author'] as String,
+    );
   }
 }

@@ -15,6 +15,8 @@ class CommunityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.recipeList.clear();
+
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,

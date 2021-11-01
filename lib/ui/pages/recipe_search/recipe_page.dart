@@ -3,9 +3,6 @@ import 'package:get/get.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
-import '../home.dart';
-
-
 class RecipeSearch extends StatelessWidget {
   final controller = Get.put(Controller());
   TextEditingController textEditingController = TextEditingController();
