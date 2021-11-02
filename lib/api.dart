@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-
 import 'package:logger/logger.dart';
-
 import 'getx/controller.dart';
+
 
 class API{
   //공공데이터 정보
@@ -39,8 +37,10 @@ class API{
       String jsonString = await readTestingData();
       return convert.jsonDecode(jsonString) as Map<String, dynamic>;
     }
-    
-    final option = '/api/' + _key + '/' + _service + '/' + _type + '/' + _start + '/' + _end + '/RCP_NM=' + recipeName;
+
+    final option = '/api/' + _key + '/' + _service + '/' +
+        _type + '/' + _start + '/' + _end + '/RCP_NM=' + recipeName;
+
     Uri uri = Uri.http(_endpoint, option);
     Logger().d("LINK : $uri");
 
@@ -56,12 +56,25 @@ class API{
   }
 
   ///서버의 데이터베이스에서 결과를 조회한다.
-  Future<dynamic> getRecipeByDatabase(String keyword) async {
-    dynamic params = {
-      "keyword" : keyword
-    };
+  Future<dynamic> getRecipeByDatabase({required String keyword, String? author}) async {
+    dynamic params;
+    Uri uri;
+    if(keyword == "SHOW_MY_RECIPE"){
+      params = {
+        "keyword" : keyword,
+        "author" : author,
+      };
 
-    Uri uri = Uri.http(_testDbServer,"searchRecipe", params);
+      uri = Uri.http(_testDbServer,"searchMyRecipe", params);
+    }
+    else{
+      params = {
+        "keyword" : keyword,
+      };
+
+      uri = Uri.http(_testDbServer,"searchRecipe", params);
+    }
+
     Logger().d("LINK : $uri");
 
     var response = await http.get(uri);
@@ -105,13 +118,14 @@ class API{
 
 
   ///사용자가 선택한 레시피 정보를 매개변수로 전달하여 서버의 레시피를 제거한다.
-  Future<bool> deleteRecipe(Recipe recipe) async {
+  Future<bool> deleteRecipe(RecipeListJson deleteList) async {
     Uri uri = Uri.http(_testDbServer, "/deleteRecipe");
     Logger().d("LINK : $uri");
 
     var response = await http.delete(
       uri,
-      body: recipe,
+      headers: {"Content-Type": "application/json"},
+      body: convert.json.encode(deleteList.toJson()),
     );
 
     if(response.statusCode != 200){

@@ -15,6 +15,9 @@ class Controller extends GetxController{
   RxInt centerPageSelect = 1.obs;
   RxList manualList = <ManualItem>[].obs;
 
+  //온라인 작업 완료 여부 : 기본 값은 true
+  RxBool isDone = true.obs;
+
   void manualAdd(){
     manualList.add(ManualItem(index: manualList.length-1));
   }
@@ -27,9 +30,64 @@ class Controller extends GetxController{
 
 
   ///레시피 키워드로 검색하기
-  void getRecipeByKeyword(String str) async {
+  void getRecipeByKeyword(String keyword) async {
+    isDone.value = false;
+
     recipeList.clear();
 
+    //먼저 공공데이터에서 결과를 가져온다.
+    await getRecipeByOpenData(keyword);
+
+    /*
+    dynamic result = await api.getRecipeByKeyword(keyword);
+
+    if(int.parse(result['total_count']) != 0){
+      for(int i = 0; i < result['row'].length; i++){
+        dynamic item = result['row'][i];
+
+        List<String> tmpManualList = [];
+        for(int i = 1; i <= 20; i++){
+          String str = item['MANUAL${sprintf("%02d", [i])}'];
+          if(str == ""){continue;}
+          tmpManualList.add(str);
+        }
+
+        List<String> tmpImgList = [];
+        for(int i = 1; i <= 20; i++){
+          String str = item['MANUAL_IMG${sprintf("%02d", [i])}'];
+          if(str == ""){continue;}
+          tmpImgList.add(str);
+        }
+
+        Recipe recipe = Recipe(
+          name: item['RCP_NM'],
+          recipeImg: item['ATT_FILE_NO_MAIN'],
+          parts: item['RCP_PARTS_DTLS'],
+          energy: item['INFO_ENG'],
+          carbohydrate: item['INFO_CAR'],
+          protein: item['INFO_PRO'],
+          fat: item['INFO_FAT'],
+          natrium: item['INFO_NA'],
+          isFavorite: 0,
+        );
+
+        recipe.manualList = tmpManualList;
+        recipe.imageList = tmpImgList;
+
+        recipeList.add(recipe);
+      }
+    }
+    */
+
+    //데이터베이스에서 결과를 가져온다.
+    getRecipeByDatabase(keyword: keyword);
+
+    Logger().d("${recipeList[0].name}");
+    isDone.value = true;
+  }
+
+
+  Future<void> getRecipeByOpenData(String str) async {
     //먼저 공공데이터에서 결과를 가져온다.
     dynamic result = await api.getRecipeByKeyword(str);
 
@@ -69,14 +127,21 @@ class Controller extends GetxController{
         recipeList.add(recipe);
       }
     }
+  }
 
 
-    //데이터베이스에서 결과를 가져온다.
-    List<dynamic> dbResult = await api.getRecipeByDatabase(str);
+  void getRecipeByDatabase({String keyword="SHOW_MY_RECIPE"}) async {
+    List<dynamic> result;
+    if(keyword == "SHOW_MY_RECIPE"){
+      result = await api.getRecipeByDatabase(keyword: keyword, author: "admin");
+    }
+    else{
+      result = await api.getRecipeByDatabase(keyword: keyword);
+    }
 
-    if(dbResult.length > 0){
-      for(int i = 0; i < dbResult.length; i++){
-        Recipe item = dbResult[i] as Recipe;
+    if(result.length > 0){
+      for(int i = 0; i < result.length; i++){
+        Recipe item = result[i] as Recipe;
 
         List<String> tmpManualList = [];
 
@@ -105,8 +170,31 @@ class Controller extends GetxController{
         recipeList.add(item);
       }
     }
+  }
 
-    Logger().d("${recipeList[0].name}");
+
+  Future<bool> deleteRecipe() async {
+    isDone.value = false;
+
+    List<Recipe> deleteList = [];
+    int count = 0;
+
+    for(int i = 0; i < recipeList.value.length; i++){
+      if(recipeList.value[i].isDelete){
+        deleteList.add(recipeList.value[i]);
+        count++;
+      }
+    }
+
+    RecipeListJson json = new RecipeListJson();
+    json.setRecipeList(deleteList);
+    json.setCount(count);
+
+    bool isComplete = await api.deleteRecipe(json);
+
+    isDone.value = true;
+
+    return isComplete;
   }
 
 
@@ -128,10 +216,14 @@ class Controller extends GetxController{
 
   ///레시피 등록
   Future<bool> recipePosting() async {
+    isDone.value = false;
+
     await recipePackaging();
     recipe.value.recipeImg = await imageToBase64();
 
     bool isComplete = await api.insertRecipe(recipe.value);
+
+    isDone.value = true;
     return isComplete;
   }
 
@@ -190,10 +282,11 @@ class Recipe{
   //1 : 좋아요 눌림
   //2 : 좋아요 안눌림
   int isFavorite;
+  bool isDelete;
 
   Recipe({this.name='', this.recipeImg='', this.parts='',
     this.energy='', this.carbohydrate='', this.protein='', this.fat='', this.natrium='',
-    this.author='', this.isFavorite=0});
+    this.author='', this.isFavorite=0, this.isDelete=false});
 
   void setName(String value) => this.name = value;
   void setImage(String value) => this.recipeImg = value;
@@ -234,5 +327,29 @@ class Recipe{
       natrium: json['recipe_nat'].toString(),
       author: json['recipe_author'] as String,
     );
+  }
+}
+
+class RecipeListJson {
+  int count = 0;
+  void setCount(int value){this.count = value;}
+
+  List<Recipe> recipeList = [];
+  void setRecipeList(List<Recipe> recipeList){this.recipeList = recipeList;}
+
+  Map<String, dynamic> toJson(){
+    List<dynamic> jsonList = [];
+
+    for(int i = 0; i < recipeList.length; i++){
+      Recipe recipe = recipeList[i];
+      Map<String, dynamic> json = recipe.toJson("admin");
+
+      jsonList.add(json);
+    }
+
+    return {
+      "count" : count,
+      "recipeList" : jsonList,
+    };
   }
 }
