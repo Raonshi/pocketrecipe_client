@@ -9,6 +9,8 @@ class RecipeSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.recipeList.clear();
+
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,

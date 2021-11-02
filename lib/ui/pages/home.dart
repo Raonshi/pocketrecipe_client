@@ -26,7 +26,14 @@ class _HomeWidgetState extends State<HomeWidget> {
   TextEditingController textEditingController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,
