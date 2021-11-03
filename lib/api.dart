@@ -45,6 +45,7 @@ class API{
     Logger().d("LINK : $uri");
 
     var response = await http.get(uri);
+
     if(response.statusCode != 200){
       Logger().d("Http Get Failed : ${response.statusCode}");
       return;
