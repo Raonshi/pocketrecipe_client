@@ -34,6 +34,14 @@ dependencies:
   sprintf: ^6.0.0
   image_picker: ^0.8.4+3
 
+  #Kakao Login
+  kakao_flutter_sdk: ^0.8.2
+  dio: ^4.0.1
+  json_annotation: ^4.3.0
+  package_info: ^2.0.2
+  shared_preferences: ^2.0.8
+  platform: ^3.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

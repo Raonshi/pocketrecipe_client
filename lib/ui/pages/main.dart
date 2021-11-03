@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'home.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 
-void main() => runApp(PocketRecipe(false));
+void main() {
+  KakaoContext.clientId = "44254f2da86dd52e9554e98faa55664d";
+  KakaoContext.javascriptClientId = "755748289fa0f2202428ea0b2797f778";
+
+  runApp(PocketRecipe(false));
+}
 
 
 class PocketRecipe extends StatelessWidget {

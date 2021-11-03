@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pocketrecipe_client/getx/controller.dart';
 
 class SettingPage extends StatelessWidget {
-  const SettingPage({Key? key}) : super(key: key);
+  final controller = Get.put(Controller());
+
 
   @override
   Widget build(BuildContext context) {
@@ -10,6 +12,18 @@ class SettingPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
+        Divider(),
+
+        ListTile(
+          trailing: Icon(Icons.login_rounded, size: 50,),
+          title: Obx(() => Text(controller.isLogin.value ? "로그인되었습니다." : "카카오톡 로그인")),
+          onTap: () async {
+            await controller.kakaoLogin();
+            loginPopup(controller, context, controller.isLogin.value);
+          },
+        ),
+
+
         Divider(),
 
         ListTile(
@@ -37,6 +51,25 @@ class SettingPage extends StatelessWidget {
 
       ],
     );
+  }
+
+
+  void loginPopup(Controller controller, BuildContext context, bool isLogin){
+    showDialog(context: context, builder: (BuildContext context){
+      return isLogin ? AlertDialog(
+        title: Text("로그인 성공"),
+        content: Text("로그인에 성공하였습니다."),
+        actions: [
+          ElevatedButton(onPressed: () => Navigator.pop(context), child: Text("닫기")),
+        ],
+      ) : AlertDialog(
+          title: Text("로그인 실패"),
+          content: Text("로그인에 실패하였습니다."),
+          actions: [
+            ElevatedButton(onPressed: () => Navigator.pop(context), child: Text("닫기")),
+          ]
+      );
+    });
   }
 }
 

@@ -27,7 +27,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    controller.checkLogin();
     super.initState();
   }
 

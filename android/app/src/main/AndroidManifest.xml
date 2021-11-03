@@ -39,6 +39,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+       <!-- Flutter Kakao Login -->
+       <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity">
+           <intent-filter android:label="flutter_web_auth">
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+               <category android:name="android.intent.category.BROWSABLE" />
+               <data android:scheme="kakao44254f2da86dd52e9554e98faa55664d" android:host="oauth"/>
+           </intent-filter>
+       </activity>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

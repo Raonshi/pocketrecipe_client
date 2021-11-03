@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/api.dart';
 import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
@@ -17,6 +19,11 @@ class Controller extends GetxController{
 
   //온라인 작업 완료 여부 : 기본 값은 true
   RxBool isDone = true.obs;
+
+  //카카오 설치 여부 확인
+  RxBool isKakaoInstalled = false.obs;
+  RxBool isLogin = false.obs;
+
 
   void manualAdd(){
     manualList.add(ManualItem(index: manualList.length-1));
@@ -173,6 +180,7 @@ class Controller extends GetxController{
   }
 
 
+  ///레시피 삭제
   Future<bool> deleteRecipe() async {
     isDone.value = false;
 
@@ -260,6 +268,79 @@ class Controller extends GetxController{
       return base64.encode(file.readAsBytesSync());
     }
   }
+
+
+//#region 카카오 계정 연동
+
+  Future<void> checkLogin() async {
+    OAuthToken token = await TokenManager.instance.getToken();
+    if(token.refreshToken == null){
+      await kakaoLogin();
+    }
+    else{
+      isLogin.value = true;
+    }
+  }
+
+
+  Future<void> kakaoLogin() async {
+    await initKakaoInstalled();
+    if(isKakaoInstalled.value){
+      isLogin.value = await loginWithTalk();
+    }
+    else{
+      isLogin.value = await loginWithKakao();
+    }
+  }
+
+
+
+  Future<void> initKakaoInstalled() async {
+    final installed = await isKakaoTalkInstalled();
+    Logger().d("Kakao Install : ${installed.toString()}");
+
+    isKakaoInstalled.value = installed;
+  }
+
+  Future<void> _issueAccessToken(String authCode) async {
+    try{
+      AccessTokenResponse token = await AuthApi.instance.issueAccessToken(authCode);
+      TokenManager.instance.setToken(token);
+      Logger().d(token);
+    }
+    catch(e){
+      Logger().d(e.toString());
+    }
+  }
+
+  Future<bool> loginWithKakao() async {
+    try{
+      var code = await UserApi.instance.loginWithKakaoAccount();
+      //await _issueAccessToken(code);
+      return true;
+    }
+    catch(e){
+      Logger().d(e.toString());
+      return false;
+    }
+  }
+
+
+  Future<bool> loginWithTalk() async {
+    try{
+      var code = await UserApi.instance.loginWithKakaoTalk();
+      //await _issueAccessToken(code);
+      return true;
+    }
+    catch(e){
+      Logger().d(e.toString());
+      return false;
+    }
+  }
+
+//#endregion
+
+
 }
 
 
