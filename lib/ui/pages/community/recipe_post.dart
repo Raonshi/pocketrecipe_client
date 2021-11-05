@@ -4,6 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
+import '../home.dart';
+import '../main.dart';
+
 class RecipePost extends StatelessWidget {
   final controller = Get.put(Controller());
 
@@ -172,7 +175,7 @@ class RecipePost extends StatelessWidget {
                   Logger().d("Energy : ${controller.recipe.value.energy}");
 
                   bool goToHome = await Get.to(() => RecipePost2());
-                  if(goToHome){Get.back();}
+                  if(goToHome){Get.back(result: true);}
                 },
                 child: Text("다음"),
               ),
@@ -340,7 +343,7 @@ class RecipePost2 extends StatelessWidget {
                       content: Text("레시피 등록이 완료되었습니다."),
                       actions: [
                         ElevatedButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => Get.back(result: true),
                           child: Text("닫기"),
                         ),
                       ],
@@ -354,7 +357,8 @@ class RecipePost2 extends StatelessWidget {
                       content: Text("레시피 등록이 실패하였습니다.\n 관리자에게 문의해주세요."),
                       actions: [
                         ElevatedButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => Get.back(result: true),
+                          //onPressed: () => Navigator.pop(context, true),
                           child: Text("닫기"),
                         ),
                       ],

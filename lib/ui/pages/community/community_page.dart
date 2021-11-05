@@ -45,9 +45,14 @@ class CommunityPage extends StatelessWidget {
             Expanded(
               flex: 3,
               child: ElevatedButton(
-                onPressed: (){
+                onPressed: () async {
                   controller.recipe.value = new Recipe();
-                  Get.to(() => RecipePost());
+                  bool goToHome = await Get.to(() => RecipePost());
+
+                  //등록, 삭제에서 돌아올 경우
+                  if(goToHome){
+                    controller.recipeList.clear();
+                    controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");                  }
                 },
                 child: Icon(Icons.add_rounded),
               ),
@@ -58,8 +63,12 @@ class CommunityPage extends StatelessWidget {
             Expanded(
               flex: 3,
               child: ElevatedButton(
-                onPressed: () {
-                  Get.to(() => RecipeDelete());
+                onPressed: () async {
+                  bool goToHome = await Get.to(() => RecipeDelete());
+                  if(goToHome){
+                    controller.recipeList.clear();
+                    controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");
+                  }
                 },
                 child: Icon(Icons.delete_rounded),
               ),

@@ -95,7 +95,7 @@ class RecipePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Image.network("${recipe.recipeImg}"),
+                  recipe.recipeImg == "Unknown" ? Image.asset("data/warning.jpeg") : Image.network("${recipe.recipeImg}"),
                 ],
               ),
             ),
@@ -213,14 +213,14 @@ class RecipePage extends StatelessWidget {
                 itemCount: recipe.manualList.length,
                 itemBuilder: (BuildContext context, int index) {
 
-                  Logger().d("IMG LENGTH : ${recipe.imageList.length}");
+                  Logger().d("IMG LENGTH : ${recipe.imageList[index]}");
                   Logger().d("MSG LENGTH : ${recipe.manualList.length}");
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Divider(),
-                      recipe.imageList.length > index ? Image.network("${recipe.imageList[index]}") : Text("<이미지가 없습니다>"),
+                      recipe.imageList.length > index ? (recipe.imageList[index] == "Unknown" ? Text("<이미지가 없습니다>") : Image.network("${recipe.imageList[index]}")) : Text("<이미지가 없습니다>"),
                       recipe.manualList.length > index ? Text(recipe.manualList[index]) : Text("<설명이 없습니다>"),
                       Divider(),
                     ],);

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -108,28 +107,27 @@ class Controller extends GetxController{
     }
 
     if(result.length > 0){
+      Logger().d(result.length);
       for(int i = 0; i < result.length; i++){
         Recipe item = result[i] as Recipe;
 
+        //DB 레시피의 메뉴얼 설명을 리스트로 변환
         List<String> tmpManualList = [];
+        for(int i = 0; i < item.manualList.length; i++){
+          String str = item.manualList[i] == null ? "NULL" : item.manualList[i];
+          Logger().d("MSG : ${str}");
 
-        int j = 0;
-        while(item.manualList.isNotEmpty && j < 20){
-          String str = item.manualList[i];
-          if(str == ""){continue;}
           tmpManualList.add(str);
-
-          j++;
         }
 
-        List<String> tmpImgList = [];
-        int k = 0;
-        while(item.imageList.isNotEmpty && k < 20){
-          String str = item.imageList[i];
-          if(str == ""){continue;}
-          tmpImgList.add(str);
 
-          k++;
+        //DB 레시피의 메뉴얼 이미지를 리스트로 변환
+        List<String> tmpImgList = [];
+        for(int i = 0; i < item.imageList.length; i++){
+          String str = item.imageList[i] == null ? "NULL" : item.imageList[i];
+          Logger().d("IMG : ${str}");
+
+          tmpImgList.add(str);
         }
 
         item.manualList = tmpManualList;
@@ -218,10 +216,7 @@ class Controller extends GetxController{
   Future<String> imageToBase64({XFile? xFile}) async {
     //이미지가 없을 경우
     if(xFile == null){
-      ByteData file = await rootBundle.load("data/warning.jpeg");
-      final buffer = file.buffer;
-      var list = buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
-      return base64.encode(list);
+      return "Unknown";
     }
     //이미지가 있을 경우
     else{
@@ -289,7 +284,6 @@ class Controller extends GetxController{
   Future<bool> loginWithKakao() async {
     try{
       var code = await UserApi.instance.loginWithKakaoAccount();
-      //await _issueAccessToken(code);
       return true;
     }
     catch(e){
@@ -302,7 +296,6 @@ class Controller extends GetxController{
   Future<bool> loginWithTalk() async {
     try{
       var code = await UserApi.instance.loginWithKakaoTalk();
-      //await _issueAccessToken(code);
       return true;
     }
     catch(e){
@@ -350,6 +343,18 @@ class Recipe{
   void setPro(String value) => this.protein = value;
   void setFat(String value) => this.fat = value;
   void setNa(String value) => this.natrium = value;
+  void setManualList(List<dynamic> value) => this.manualList = value;
+  void setImageList(List<dynamic> value) {
+
+    for(int i = 0; i < value.length; i++){
+      if(value[i] == "Unknown"){
+        imageList.add(value[i]);
+      }
+      else{
+        imageList.add("http://10.0.2.2:8080/image/view?filePath=" + value[i]);
+      }
+    }
+  }
 
 
   Map<String, dynamic> toJson(String author){
@@ -372,7 +377,7 @@ class Recipe{
     String imagePath = "http://10.0.2.2:8080/image/view?filePath=";
     return Recipe(
       name: json["recipe_name"] as String,
-      recipeImg: imagePath + json['recipe_image'] as String,
+      recipeImg: json['recipe_image'] == "Unknown" ? "Unknown" : imagePath + json['recipe_image'] as String,
       parts: "",
       energy: json['recipe_eng'].toString(),
       carbohydrate: json['recipe_cal'].toString(),

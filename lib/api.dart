@@ -86,7 +86,19 @@ class API{
 
     var utf8Decode = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(utf8Decode) as List;
-    List list = jsonResponse.map((e) => Recipe.fromJson(e)).toList();
+
+    List list = [];
+    for(int i = 0; i <jsonResponse.length; i++){
+      dynamic item = jsonResponse[i];
+      Recipe recipe = Recipe.fromJson(item);
+
+      recipe.setManualList(item['recipe_manualList'] as List);
+      recipe.setImageList(item['recipe_imageList'] as List);
+
+      list.add(recipe);
+    }
+
+    //List list = jsonResponse.map((e) => Recipe.fromJson(e)).toList();
 
     return list;
   }

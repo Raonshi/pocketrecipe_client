@@ -31,7 +31,7 @@ class RecipeItem extends StatelessWidget {
               onTap: (){
                 Get.to(() => RecipePage(recipe));
               },
-              child: Image.network("${recipe.recipeImg}"),
+              child: recipe.recipeImg == "Unknown" ? Image.asset("data/warning.jpeg") : Image.network("${recipe.recipeImg}"),
             ),
           ),
 

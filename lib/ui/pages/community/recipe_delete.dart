@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
+import '../home.dart';
+
 
 class RecipeDelete extends StatefulWidget {
   const RecipeDelete({Key? key}) : super(key: key);
@@ -75,7 +77,7 @@ class _RecipeDeleteState extends State<RecipeDelete> {
                         content: Text("레시피 삭제가 완료되었습니다."),
                         actions: [
                           ElevatedButton(
-                            onPressed: () => Navigator.pop(context, true),
+                            onPressed: () => Get.back(result: true),
                             child: Text("닫기"),
                           ),
                         ],
@@ -89,7 +91,7 @@ class _RecipeDeleteState extends State<RecipeDelete> {
                         content: Text("레시피 삭제가 실패하였습니다.\n 관리자에게 문의해주세요."),
                         actions: [
                           ElevatedButton(
-                            onPressed: () => Navigator.pop(context, true),
+                            onPressed: () => Get.back(result: true),
                             child: Text("닫기"),
                           ),
                         ],
