@@ -30,7 +30,7 @@ class _RecipeDeleteState extends State<RecipeDelete> {
       onWillPop: () => onBackButtonPressed(context),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("레시피 등록"),
+          title: Text("레시피 삭제"),
         ),
         resizeToAvoidBottomInset: false,
         body: Column(
@@ -47,16 +47,19 @@ class _RecipeDeleteState extends State<RecipeDelete> {
                   scrollDirection: Axis.vertical,
                   itemCount: controller.recipeList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: Checkbox(
-                        value: controller.recipeList.value[index].isDelete,
-                        onChanged: (check){
-                          setState(() {
-                            controller.recipeList.value[index].isDelete = check!;
-                          });
-                        },
+                    return Card(
+                      shadowColor: Colors.black,
+                      child: ListTile(
+                        leading: Checkbox(
+                          value: controller.recipeList.value[index].isDelete,
+                          onChanged: (check){
+                            setState(() {
+                              controller.recipeList.value[index].isDelete = check!;
+                            });
+                          },
+                        ),
+                        title: Text(controller.recipeList.value[index].name),
                       ),
-                      title: Text(controller.recipeList.value[index].name),
                     );
                   }),),
             ),

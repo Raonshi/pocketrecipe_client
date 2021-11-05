@@ -24,13 +24,12 @@ class API{
   final _start = '1';
   final _end = '5';
 
-  void test() async{
-    var result = await getRecipeByKeyword('된장국');
-    print("결과 : ${result['row']}");
-  }
 
-
-  ///공공데이터포털의 레시피 데이터를 가져온다.
+//#region 공공데이터 API
+  ///<h2>공공데이터 조회</h2>
+  ///<p>식품안전나라 공공데이터의 레시피 데이터를 가져온다.</p>
+  ///<p>params: [String] recipeName</p>
+  ///<p>result: [dynamic]</p>
   Future<dynamic> getRecipeByKeyword(String recipeName) async{
     
     if(Platform.environment.containsKey('FLUTTER_TEST')){
@@ -56,7 +55,14 @@ class API{
     return jsonResponse['COOKRCP01'];
   }
 
-  ///서버의 데이터베이스에서 결과를 조회한다.
+//#endregion
+
+
+//#region 서버DB API
+  ///<h2>서버 DB 조회</h2>
+  ///<p>서버의 데이터베이스에서 결과를 조회한다.</p>
+  ///<p>params: [String] keyword, [String] author
+  ///<p>return: dynamic</p>
   Future<dynamic> getRecipeByDatabase({required String keyword, String? author}) async {
     dynamic params;
     Uri uri;
@@ -97,14 +103,14 @@ class API{
 
       list.add(recipe);
     }
-
-    //List list = jsonResponse.map((e) => Recipe.fromJson(e)).toList();
-
     return list;
   }
 
 
-  ///데이터베이스 서버에 레시피 정보를 저장한다.
+  ///<h2>레시피 등록</h2>
+  ///<p>데이터베이스 서버에 레시피 정보를 저장한다.</p>
+  ///<p>params: [Recipe] recipe</p>
+  ///<p>return: bool</p>
   Future<bool> insertRecipe(Recipe recipe) async {
     Uri uri = Uri.http(_testDbServer, "/insertRecipe");
     Logger().d("LINK : $uri");
@@ -130,7 +136,10 @@ class API{
   }
 
 
-  ///사용자가 선택한 레시피 정보를 매개변수로 전달하여 서버의 레시피를 제거한다.
+  ///<h2>레시피 삭제</h2>
+  ///<p>사용자가 선택한 레시피 정보를 매개변수로 전달하여 서버의 레시피를 제거한다.</p>
+  ///<p>params: [RecipeListJson] deleteList<p>
+  ///<p>return: bool</p>
   Future<bool> deleteRecipe(RecipeListJson deleteList) async {
     Uri uri = Uri.http(_testDbServer, "/deleteRecipe");
     Logger().d("LINK : $uri");
@@ -156,7 +165,46 @@ class API{
   }
 
 
+  Future<bool> updateRecipe(Recipe recipe) async {
+    Uri uri = Uri.http(_testDbServer, "/updateRecipe");
+    Logger().d("LINK : $uri");
+
+    String author = recipe.author;
+
+    var response = await http.post(
+      uri,
+      headers: {"Content-Type": "application/json"},
+      body: convert.json.encode(recipe.toJson(author)),
+    );
+
+    if(response.statusCode != 200){
+      Logger().d("REST API (UPDATE) FAIL : ${response.statusCode}");
+      return false;
+    }
+    else{
+      if(response.body == "Success"){
+        return true;
+
+      }
+      else{
+        return false;
+      }
+    }
+
+  }
+
+//#endregion
+
+
+
 //#region 테스트환경 json코드
+
+  void test() async{
+    var result = await getRecipeByKeyword('된장국');
+    print("결과 : ${result['row']}");
+  }
+
+
   Future<File> get _localFile async {
     final path = "data/testing_data.json";
     return File('$path');

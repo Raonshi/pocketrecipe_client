@@ -160,9 +160,24 @@ class Controller extends GetxController{
     bool isComplete = await api.deleteRecipe(json);
 
     isDone.value = true;
-
     return isComplete;
   }
+
+
+  ///레시피 수정
+  Future<bool> updateRecipe() async {
+    isDone.value = false;
+
+    Recipe recipe = new Recipe();
+
+
+    bool isComplete = await api.updateRecipe(recipe);
+
+    isDone.value = true;
+    return isComplete;
+  }
+
+
 
 
   ///카메라를 통한 이미지 로드
@@ -185,6 +200,7 @@ class Controller extends GetxController{
   Future<bool> recipePosting() async {
     isDone.value = false;
 
+    //패키징
     await recipePackaging();
     recipe.value.recipeImg = await imageToBase64();
 
@@ -196,6 +212,10 @@ class Controller extends GetxController{
 
   ///레시피 정보 패키징
   Future<void> recipePackaging() async {
+    //작성자 정보 패키징
+
+
+    //매뉴얼 설명, 매뉴얼 이미지 패키징
     for(int i = 0; i < 20; i++){
 
       if(i < manualList.length){
@@ -242,12 +262,15 @@ class Controller extends GetxController{
 
   Future<void> checkLogin() async {
     OAuthToken token = await TokenManager.instance.getToken();
+
     if(token.refreshToken == null){
       await kakaoLogin();
     }
     else{
       isLogin.value = true;
     }
+
+
   }
 
 
@@ -330,10 +353,11 @@ class Recipe{
   //2 : 좋아요 안눌림
   int isFavorite;
   bool isDelete;
+  bool isUpdate;
 
   Recipe({this.name='', this.recipeImg='', this.parts='',
     this.energy='', this.carbohydrate='', this.protein='', this.fat='', this.natrium='',
-    this.author='', this.isFavorite=0, this.isDelete=false});
+    this.author='', this.isFavorite=0, this.isDelete=false, this.isUpdate=false});
 
   void setName(String value) => this.name = value;
   void setImage(String value) => this.recipeImg = value;

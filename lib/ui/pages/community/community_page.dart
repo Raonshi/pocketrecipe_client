@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/pages/community/recipe_delete.dart';
 import 'package:pocketrecipe_client/ui/pages/community/recipe_post.dart';
-import 'package:pocketrecipe_client/ui/pages/home.dart';
-import 'package:pocketrecipe_client/ui/pages/main.dart';
+import 'package:pocketrecipe_client/ui/pages/community/recipe_update.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
 
@@ -71,6 +66,22 @@ class CommunityPage extends StatelessWidget {
                   }
                 },
                 child: Icon(Icons.delete_rounded),
+              ),
+            ),
+
+            Spacer(),
+
+            Expanded(
+              flex: 3,
+              child: ElevatedButton(
+                onPressed: () async {
+                  bool goToHome = await Get.to(() => RecipeUpdate());
+                  if(goToHome){
+                    controller.recipeList.clear();
+                    controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");
+                  }
+                },
+                child: Icon(Icons.edit_rounded),
               ),
             ),
 

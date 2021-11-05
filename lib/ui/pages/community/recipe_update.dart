@@ -1,10 +1,139 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
-class RecipePost extends StatelessWidget {
+class RecipeUpdate extends StatefulWidget {
+  const RecipeUpdate({Key? key}) : super(key: key);
+
+  @override
+  _RecipeUpdateState createState() => _RecipeUpdateState();
+}
+
+class _RecipeUpdateState extends State<RecipeUpdate> {
+  final controller = Get.put(Controller());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.recipeList.value.clear();
+    controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () => onBackButtonPressed(context),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("레시피 수정"),
+        ),
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Spacer(),
+
+            //레시피 게시글 피드
+            Expanded(
+              flex:12,
+              child: Obx(() => ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: controller.recipeList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      shadowColor: Colors.black87,
+                      child: ListTile(
+                        leading: Checkbox(
+                          value: controller.recipeList.value[index].isUpdate,
+                          onChanged: (check){
+                            setState(() {
+                              //먼저 전부 초기화
+                              for(int i = 0; i < controller.recipeList.length; i++){
+                                controller.recipeList.value[i].isUpdate = false;
+                              }
+                              //선택한 레시피만 체크표시
+                              controller.recipeList.value[index].isUpdate = check!;
+                              controller.recipe.value = controller.recipeList.value[index];
+                            });
+                          },
+                        ),
+                        title: Text(controller.recipeList.value[index].name),
+                      ),
+                    );
+                  }),),
+            ),
+
+            Spacer(),
+
+            //수정 버튼
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                onPressed: () async {
+                  //bool isComplete = await controller.updateRecipe();
+                  bool isComplete = await Get.to(RecipeUpdate1());
+
+                  bool goToHome = false;
+                  if(isComplete){
+                    goToHome = await showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text("알림"),
+                        content: Text("레시피 수정이 완료되었습니다."),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () => Get.back(result: true),
+                            child: Text("닫기"),
+                          ),
+                        ],
+                      );
+                    });
+                  }
+                  else{
+                    goToHome = await showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text("알림"),
+                        content: Text("레시피 수정이 실패하였습니다.\n 관리자에게 문의해주세요."),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () => Get.back(result: true),
+                            child: Text("닫기"),
+                          ),
+                        ],
+                      );
+                    });
+                  }
+
+                  if(goToHome){Get.back(result: true);}
+
+                },
+                child: Text("수정", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              ),
+            ),
+
+            Spacer(),
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Future<bool> onBackButtonPressed(BuildContext context) async {
+    Navigator.pop(context);
+    return true;
+  }
+}
+
+
+
+
+
+class RecipeUpdate1 extends StatelessWidget {
   final controller = Get.put(Controller());
 
   @override
@@ -12,7 +141,7 @@ class RecipePost extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("레시피 등록"),
+        title: Text("레시피 수정"),
       ),
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -27,14 +156,15 @@ class RecipePost extends StatelessWidget {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "레시피 이름",
-                          border: OutlineInputBorder()
-                      ),
-                      onChanged: (str){
-                        controller.recipe.value.setName(str);
-                      }
+                  child: TextFormField(
+                    initialValue: controller.recipe.value.name,
+                    decoration: InputDecoration(
+                        hintText: "레시피 이름",
+                        border: OutlineInputBorder()
+                    ),
+                    onChanged: (str){
+                      controller.recipe.value.setName(str);
+                    },
                   ),
                 ),
               )
@@ -66,14 +196,15 @@ class RecipePost extends StatelessWidget {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "칼로리(kcal)",
-                          border: OutlineInputBorder()
-                      ),
-                      onChanged: (str){
-                        controller.recipe.value.setEnergy(str);
-                      }
+                  child: TextFormField(
+                    initialValue: controller.recipe.value.energy,
+                    decoration: InputDecoration(
+                        hintText: "칼로리(kcal)",
+                        border: OutlineInputBorder()
+                    ),
+                    onChanged: (str){
+                      controller.recipe.value.setEnergy(str);
+                    }
                   ),
                 ),
               ),
@@ -81,14 +212,15 @@ class RecipePost extends StatelessWidget {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "나트륨(mg)",
-                          border: OutlineInputBorder()
-                      ),
-                      onChanged: (str){
-                        controller.recipe.value.setNa(str);
-                      }
+                  child: TextFormField(
+                    initialValue: controller.recipe.value.natrium,
+                    decoration: InputDecoration(
+                        hintText: "나트륨(mg)",
+                        border: OutlineInputBorder()
+                    ),
+                    onChanged: (str){
+                      controller.recipe.value.setNa(str);
+                    }
                   ),
                 ),
               ),
@@ -103,14 +235,15 @@ class RecipePost extends StatelessWidget {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "탄수화물(g)",
-                          border: OutlineInputBorder()
-                      ),
-                      onChanged: (str){
-                        controller.recipe.value.setCal(str);
-                      }
+                  child: TextFormField(
+                    initialValue: controller.recipe.value.carbohydrate,
+                    decoration: InputDecoration(
+                        hintText: "탄수화물(g)",
+                        border: OutlineInputBorder()
+                    ),
+                    onChanged: (str){
+                      controller.recipe.value.setCal(str);
+                    }
                   ),
                 ),
               )
@@ -125,14 +258,15 @@ class RecipePost extends StatelessWidget {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "지방(g)",
-                          border: OutlineInputBorder()
-                      ),
-                      onChanged: (str){
-                        controller.recipe.value.setFat(str);
-                      }
+                  child: TextFormField(
+                    initialValue: controller.recipe.value.fat,
+                    decoration: InputDecoration(
+                        hintText: "지방(g)",
+                        border: OutlineInputBorder()
+                    ),
+                    onChanged: (str){
+                      controller.recipe.value.setFat(str);
+                    }
                   ),
                 ),
               )
@@ -147,14 +281,15 @@ class RecipePost extends StatelessWidget {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "단백질(g)",
-                          border: OutlineInputBorder()
-                      ),
-                      onChanged: (str){
-                        controller.recipe.value.setPro(str);
-                      }
+                  child: TextFormField(
+                    initialValue: controller.recipe.value.protein,
+                    decoration: InputDecoration(
+                        hintText: "단백질(g)",
+                        border: OutlineInputBorder()
+                    ),
+                    onChanged: (str){
+                      controller.recipe.value.setPro(str);
+                    }
                   ),
                 ),
               )
@@ -168,10 +303,7 @@ class RecipePost extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  Logger().d("Name : ${controller.recipe.value.name}");
-                  Logger().d("Energy : ${controller.recipe.value.energy}");
-
-                  bool goToHome = await Get.to(() => RecipePost2());
+                  bool goToHome = await Get.to(() => RecipeUpdate2());
                   if(goToHome){Get.back(result: true);}
                 },
                 child: Text("다음"),
@@ -229,7 +361,8 @@ class RecipePost extends StatelessWidget {
 }
 
 
-class RecipePost2 extends StatelessWidget {
+
+class RecipeUpdate2 extends StatelessWidget {
   final controller = Get.put(Controller());
 
   //List<ManualItem> manualList = [];
@@ -328,7 +461,6 @@ class RecipePost2 extends StatelessWidget {
             flex: 2,
             child: ElevatedButton(
               onPressed: () async{
-                Logger().d("등록");
                 //레시피 등록 절차 수행
                 bool isComplete = await controller.recipePosting();
                 bool goToHome = false;
@@ -378,4 +510,6 @@ class RecipePost2 extends StatelessWidget {
     );
   }
 }
+
+
 
