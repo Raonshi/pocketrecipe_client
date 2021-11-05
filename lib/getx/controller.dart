@@ -45,47 +45,6 @@ class Controller extends GetxController{
     //먼저 공공데이터에서 결과를 가져온다.
     await getRecipeByOpenData(keyword);
 
-    /*
-    dynamic result = await api.getRecipeByKeyword(keyword);
-
-    if(int.parse(result['total_count']) != 0){
-      for(int i = 0; i < result['row'].length; i++){
-        dynamic item = result['row'][i];
-
-        List<String> tmpManualList = [];
-        for(int i = 1; i <= 20; i++){
-          String str = item['MANUAL${sprintf("%02d", [i])}'];
-          if(str == ""){continue;}
-          tmpManualList.add(str);
-        }
-
-        List<String> tmpImgList = [];
-        for(int i = 1; i <= 20; i++){
-          String str = item['MANUAL_IMG${sprintf("%02d", [i])}'];
-          if(str == ""){continue;}
-          tmpImgList.add(str);
-        }
-
-        Recipe recipe = Recipe(
-          name: item['RCP_NM'],
-          recipeImg: item['ATT_FILE_NO_MAIN'],
-          parts: item['RCP_PARTS_DTLS'],
-          energy: item['INFO_ENG'],
-          carbohydrate: item['INFO_CAR'],
-          protein: item['INFO_PRO'],
-          fat: item['INFO_FAT'],
-          natrium: item['INFO_NA'],
-          isFavorite: 0,
-        );
-
-        recipe.manualList = tmpManualList;
-        recipe.imageList = tmpImgList;
-
-        recipeList.add(recipe);
-      }
-    }
-    */
-
     //데이터베이스에서 결과를 가져온다.
     getRecipeByDatabase(keyword: keyword);
 
@@ -102,6 +61,7 @@ class Controller extends GetxController{
       for(int i = 0; i < result['row'].length; i++){
         dynamic item = result['row'][i];
 
+        //레시피 메뉴얼 설명을 리스트로 변환
         List<String> tmpManualList = [];
         for(int i = 1; i <= 20; i++){
           String str = item['MANUAL${sprintf("%02d", [i])}'];
@@ -109,6 +69,7 @@ class Controller extends GetxController{
           tmpManualList.add(str);
         }
 
+        //레시피 매뉴얼 이미지를 리스트로 변환
         List<String> tmpImgList = [];
         for(int i = 1; i <= 20; i++){
           String str = item['MANUAL_IMG${sprintf("%02d", [i])}'];
@@ -267,6 +228,18 @@ class Controller extends GetxController{
       File file = new File(xFile.path);
       return base64.encode(file.readAsBytesSync());
     }
+  }
+
+
+  Future<void> onClickFavorite(Recipe recipe) async {
+    if(recipe.isFavorite == 1){
+      recipe.isFavorite = 2;
+      return;
+    }
+    else if(recipe.isFavorite == 2){
+      recipe.isFavorite = 1;
+    }
+    return;
   }
 
 

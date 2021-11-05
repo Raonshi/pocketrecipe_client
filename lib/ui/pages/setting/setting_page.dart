@@ -83,7 +83,42 @@ class OpenSourceInfoPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("오픈소스 정보"),
       ),
-      body: Text("오픈소스 정보"),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Divider(),
+          ListTile(
+            title: Text("GetX"),
+            subtitle: Text("get"),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("Kakao Login"),
+            subtitle: Column(
+              children: [
+                Text("kakao_flutter_sdk | dio | json_annotation", textAlign: TextAlign.left,),
+                Text("package_info | shared_preferences | platform", textAlign: TextAlign.left),
+              ]
+            )
+          ),
+          Divider(),
+          ListTile(
+            title: Text("HTTP"),
+            subtitle: Text("http"),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("LOG"),
+            subtitle: Text("logger"),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("IMAGE"),
+            subtitle: Text("image_picker"),
+          ),
+          Divider(),
+        ],
+      ),
     );
   }
 }

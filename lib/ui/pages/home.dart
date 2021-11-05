@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/ui/pages/community/community_page.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
 import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
-import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
 import '../../getx/controller.dart';
 
@@ -28,6 +26,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   void initState() {
     controller.checkLogin();
+    controller.getRecipeByDatabase();
     super.initState();
   }
 

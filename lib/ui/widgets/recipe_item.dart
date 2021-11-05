@@ -10,6 +10,7 @@ class RecipeItem extends StatelessWidget {
   RecipeItem(this.recipe);
 
   Icon favorite = Icon(Icons.favorite_border_rounded);
+  final controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class RecipeItem extends StatelessWidget {
             flex: 4,
             child: InkWell(
               onTap: (){
-                Get.to(RecipePage(recipe));
+                Get.to(() => RecipePage(recipe));
               },
               child: Image.network("${recipe.recipeImg}"),
             ),
@@ -50,9 +51,11 @@ class RecipeItem extends StatelessWidget {
                   flex: 1,
                   child: IconButton(
                       onPressed: (){
+                        controller.onClickFavorite(recipe);
                       },
-                      icon: favorite),
-                )
+                      icon: favorite,
+                  ),
+                ),
               ],
             ),
           ),

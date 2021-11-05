@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
@@ -72,9 +73,7 @@ class RecipeSearch extends StatelessWidget {
 
 
 class RecipePage extends StatelessWidget {
-
   Recipe recipe;
-
   RecipePage(this.recipe);
 
   @override
@@ -90,17 +89,27 @@ class RecipePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             //완성 이미지
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Image.network("${recipe.recipeImg}"),
-              ],
+            Expanded(
+              flex: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Image.network("${recipe.recipeImg}"),
+                ],
+              ),
             ),
-            SizedBox(height: 30,),
+
+            Divider(),
 
             //재료
-            Text("필요한 재료", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+            Expanded(
+              flex: 1,
+              child: Text(
+                "필요한 재료",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              )
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
@@ -118,7 +127,8 @@ class RecipePage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 30,),
+
+            Divider(),
 
             //요리 열량
             Text("열량", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
@@ -190,10 +200,34 @@ class RecipePage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 30,),
+
+            Divider(),
 
             //요리 과정
             //리스트뷰로 만들어야할듯
+            Expanded(
+              flex:8,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: recipe.manualList.length,
+                itemBuilder: (BuildContext context, int index) {
+
+                  Logger().d("IMG LENGTH : ${recipe.imageList.length}");
+                  Logger().d("MSG LENGTH : ${recipe.manualList.length}");
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Divider(),
+                      recipe.imageList.length > index ? Image.network("${recipe.imageList[index]}") : Text("<이미지가 없습니다>"),
+                      recipe.manualList.length > index ? Text(recipe.manualList[index]) : Text("<설명이 없습니다>"),
+                      Divider(),
+                    ],);
+                },
+              ),
+            ),
+
           ],
         ),
       ),
