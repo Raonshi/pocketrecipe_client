@@ -64,6 +64,12 @@ class API{
   ///<p>params: [String] keyword, [String] author
   ///<p>return: dynamic</p>
   Future<dynamic> getRecipeByDatabase({required String keyword, String? author}) async {
+
+    if(Platform.environment.containsKey('FLUTTER_TEST')){
+      String jsonString = await readTestingData();
+      return convert.jsonDecode(jsonString) as Map<String, dynamic>;
+    }
+
     dynamic params;
     Uri uri;
     if(keyword == "SHOW_MY_RECIPE"){
