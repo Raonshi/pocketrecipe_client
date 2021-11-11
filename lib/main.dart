@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'home.dart';
+import 'package:pocketrecipe_client/ui/pages/home.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 
 void main() {

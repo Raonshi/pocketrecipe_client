@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
@@ -14,9 +13,6 @@ class RecipeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    Logger().d("아이템 이름 : ${recipe.name}");
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       width: 300,
@@ -42,9 +38,10 @@ class RecipeItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Spacer(),
                 Expanded(
-                    flex : 1,
-                    child: Text(recipe.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
+                    flex : 3,
+                    child: Text(recipe.name, textAlign: TextAlign.center, maxLines: 1, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
                 ),
 
                 Expanded(
@@ -56,6 +53,7 @@ class RecipeItem extends StatelessWidget {
                       icon: favorite,
                   ),
                 ),
+                Spacer(),
               ],
             ),
           ),

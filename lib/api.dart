@@ -16,7 +16,7 @@ class API{
   final _testDbServer = "10.0.2.2:8080";
 
   //데이터베이스 서버 정보 - 라이브
-  final _dbSever = "220.86.224.184:12010";
+  final _dbServer = "220.86.224.184:12000";
 
   //final _type = 'testing_data.json';
   final _type = 'json';
@@ -72,14 +72,14 @@ class API{
         "author" : author,
       };
 
-      uri = Uri.http(_testDbServer,"searchMyRecipe", params);
+      uri = Uri.http(_dbServer,"searchMyRecipe", params);
     }
     else{
       params = {
         "keyword" : keyword,
       };
 
-      uri = Uri.http(_testDbServer,"searchRecipe", params);
+      uri = Uri.http(_dbServer,"searchRecipe", params);
     }
 
     Logger().d("LINK : $uri");
@@ -112,7 +112,7 @@ class API{
   ///<p>params: [Recipe] recipe</p>
   ///<p>return: bool</p>
   Future<bool> insertRecipe(Recipe recipe) async {
-    Uri uri = Uri.http(_testDbServer, "/insertRecipe");
+    Uri uri = Uri.http(_dbServer, "/insertRecipe");
     Logger().d("LINK : $uri");
 
     var response = await http.post(
@@ -141,7 +141,7 @@ class API{
   ///<p>params: [RecipeListJson] deleteList<p>
   ///<p>return: bool</p>
   Future<bool> deleteRecipe(RecipeListJson deleteList) async {
-    Uri uri = Uri.http(_testDbServer, "/deleteRecipe");
+    Uri uri = Uri.http(_dbServer, "/deleteRecipe");
     Logger().d("LINK : $uri");
 
     var response = await http.delete(
@@ -166,7 +166,7 @@ class API{
 
 
   Future<bool> updateRecipe(Recipe recipe) async {
-    Uri uri = Uri.http(_testDbServer, "/updateRecipe");
+    Uri uri = Uri.http(_dbServer, "/updateRecipe");
     Logger().d("LINK : $uri");
 
     String author = recipe.author;

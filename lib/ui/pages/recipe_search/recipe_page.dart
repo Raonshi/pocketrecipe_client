@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
 
@@ -212,9 +211,6 @@ class RecipePage extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: recipe.manualList.length,
                 itemBuilder: (BuildContext context, int index) {
-
-                  Logger().d("IMG LENGTH : ${recipe.imageList[index]}");
-                  Logger().d("MSG LENGTH : ${recipe.manualList.length}");
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
