@@ -114,14 +114,14 @@ class API{
   ///<p>사용자가 선택한 레시피 정보를 매개변수로 전달하여 서버의 레시피를 제거한다.</p>
   ///<p>params: [RecipeListJson] deleteList<p>
   ///<p>return: bool</p>
-  Future<bool> deleteRecipe(RecipeListJson deleteList) async {
+  Future<bool> deleteRecipe(RecipeListJson deleteList, String author) async {
     Uri uri = Uri.http(_dbServer, "/deleteRecipe");
     Logger().d("LINK : $uri");
 
     var response = await http.delete(
       uri,
       headers: {"Content-Type": "application/json"},
-      body: convert.json.encode(deleteList.toJson()),
+      body: convert.json.encode(deleteList.toJson(author)),
     );
 
     if(response.statusCode != 200){

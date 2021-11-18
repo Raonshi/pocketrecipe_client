@@ -136,6 +136,7 @@ class Controller extends GetxController{
   ///레시피 삭제
   Future<bool> deleteRecipe() async {
     isDone.value = false;
+    String author = await getKakaoEmail();
 
     List<Recipe> deleteList = [];
     int count = 0;
@@ -151,7 +152,7 @@ class Controller extends GetxController{
     json.setRecipeList(deleteList);
     json.setCount(count);
 
-    bool isComplete = await api.deleteRecipe(json);
+    bool isComplete = await api.deleteRecipe(json, author);
 
     isDone.value = true;
     return isComplete;
@@ -442,13 +443,12 @@ class RecipeListJson {
   List<Recipe> recipeList = [];
   void setRecipeList(List<Recipe> recipeList){this.recipeList = recipeList;}
 
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson(String author) {
     List<dynamic> jsonList = [];
 
     for(int i = 0; i < recipeList.length; i++){
       Recipe recipe = recipeList[i];
-      Map<String, dynamic> json = recipe.toJson("admin");
-
+      Map<String, dynamic> json = recipe.toJson(author);
       jsonList.add(json);
     }
 
