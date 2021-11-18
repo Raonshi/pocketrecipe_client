@@ -286,6 +286,8 @@ class Controller extends GetxController{
 //#region 카카오 계정
   Future<String> getKakaoEmail() async {
     String email = 'guest';
+
+    await checkLogin();
     try{
       User user = await UserApi.instance.me();
       if(user.kakaoAccount != null && user.kakaoAccount!.email != null){
@@ -307,8 +309,6 @@ class Controller extends GetxController{
     else{
       isLogin.value = true;
     }
-
-
   }
 
 
