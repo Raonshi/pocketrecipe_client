@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
 class RecipePost extends StatelessWidget {
@@ -168,9 +167,6 @@ class RecipePost extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  Logger().d("Name : ${controller.recipe.value.name}");
-                  Logger().d("Energy : ${controller.recipe.value.energy}");
-
                   bool goToHome = await Get.to(() => RecipePost2());
                   if(goToHome){Get.back(result: true);}
                 },
@@ -195,7 +191,7 @@ class RecipePost extends StatelessWidget {
               children: [
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    controller.encodeImageFromCamera();
+                    await controller.encodeImageFromCamera(99);
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -206,7 +202,7 @@ class RecipePost extends StatelessWidget {
 
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    controller.encodeImageFromGallery();
+                    controller.encodeImageFromGallery(99);
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -328,7 +324,6 @@ class RecipePost2 extends StatelessWidget {
             flex: 2,
             child: ElevatedButton(
               onPressed: () async{
-                Logger().d("등록");
                 //레시피 등록 절차 수행
                 bool isComplete = await controller.recipePosting();
                 bool goToHome = false;
@@ -363,7 +358,10 @@ class RecipePost2 extends StatelessWidget {
                   });
                 }
 
-                if(goToHome){Get.back(result: true);}
+                if(goToHome){
+                  controller.manualList.clear();
+                  Get.back(result: true);
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),

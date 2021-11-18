@@ -47,7 +47,8 @@ class CommunityPage extends StatelessWidget {
                   //등록, 삭제에서 돌아올 경우
                   if(goToHome){
                     controller.recipeList.clear();
-                    controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");                  }
+                    controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");
+                  }
                 },
                 child: Icon(Icons.add_rounded),
               ),

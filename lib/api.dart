@@ -41,16 +41,8 @@ class API{
         _type + '/' + _start + '/' + _end + '/RCP_NM=' + recipeName;
 
     Uri uri = Uri.http(_endpoint, option);
-    Logger().d("LINK : $uri");
+    var utf8Data = await getUri(uri);
 
-    var response = await http.get(uri);
-
-    if(response.statusCode != 200){
-      Logger().d("Http Get Failed : ${response.statusCode}");
-      return;
-    }
-
-    var utf8Data = utf8.decode(response.bodyBytes);
     var jsonResponse = convert.jsonDecode(utf8Data) as Map<String, dynamic>;
     return jsonResponse['COOKRCP01'];
   }
@@ -64,7 +56,6 @@ class API{
   ///<p>params: [String] keyword, [String] author
   ///<p>return: dynamic</p>
   Future<dynamic> getRecipeByDatabase({required String keyword, String? author}) async {
-
     if(Platform.environment.containsKey('FLUTTER_TEST')){
       String jsonString = await readTestingData();
       return convert.jsonDecode(jsonString) as Map<String, dynamic>;
@@ -77,28 +68,17 @@ class API{
         "keyword" : keyword,
         "author" : author,
       };
-
       uri = Uri.http(_dbServer,"searchMyRecipe", params);
     }
     else{
       params = {
         "keyword" : keyword,
       };
-
       uri = Uri.http(_dbServer,"searchRecipe", params);
     }
+    var utf8Decode = await getUri(uri);
 
-    Logger().d("LINK : $uri");
-
-    var response = await http.get(uri);
-    if(response.statusCode != 200){
-      Logger().d("Http Get Failed : ${response.statusCode}");
-      return;
-    }
-
-    var utf8Decode = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(utf8Decode) as List;
-
     List list = [];
     for(int i = 0; i <jsonResponse.length; i++){
       dynamic item = jsonResponse[i];
@@ -119,25 +99,13 @@ class API{
   ///<p>return: bool</p>
   Future<bool> insertRecipe(Recipe recipe) async {
     Uri uri = Uri.http(_dbServer, "/insertRecipe");
-    Logger().d("LINK : $uri");
 
-    var response = await http.post(
-      uri,
-      headers: {"Content-Type": "application/json"},
-      body: convert.json.encode(recipe.toJson("admin")),
-    );
-
-    if(response.statusCode != 200){
-      Logger().d("REST API (POST) Failed : ${response.statusCode}");
-      return false;
+    String response = await postUri(uri, recipe);
+    if(response == "Success"){
+      return true;
     }
     else{
-      if(response.body == "Success"){
-        return true;
-      }
-      else{
-        return false;
-      }
+      return false;
     }
   }
 
@@ -173,33 +141,40 @@ class API{
 
   Future<bool> updateRecipe(Recipe recipe) async {
     Uri uri = Uri.http(_dbServer, "/updateRecipe");
-    Logger().d("LINK : $uri");
+    String response = await postUri(uri, recipe);
 
-    String author = recipe.author;
+    if(response == "Success"){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
+//#endregion
+  Future<dynamic> getUri(Uri uri) async {
+    var response = await http.get(uri);
+    if(response.statusCode != 200){
+      Logger().d("Http Get Failed : ${response.statusCode}");
+      return;
+    }
+    return utf8.decode(response.bodyBytes);
+  }
+
+
+  Future<dynamic> postUri(Uri uri, Recipe recipe) async {
     var response = await http.post(
       uri,
       headers: {"Content-Type": "application/json"},
-      body: convert.json.encode(recipe.toJson(author)),
+      body: convert.json.encode(recipe.toJson(recipe.author)),
     );
 
     if(response.statusCode != 200){
       Logger().d("REST API (UPDATE) FAIL : ${response.statusCode}");
       return false;
     }
-    else{
-      if(response.body == "Success"){
-        return true;
-
-      }
-      else{
-        return false;
-      }
-    }
-
+    return response.body;
   }
-
-//#endregion
 
 
 
@@ -230,6 +205,5 @@ class API{
     }
   }
 //#endregion
-
 
 }

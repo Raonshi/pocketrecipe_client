@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
-
-import '../home.dart';
 
 
 class RecipeDelete extends StatefulWidget {
@@ -114,50 +111,6 @@ class _RecipeDeleteState extends State<RecipeDelete> {
           ],
         ),
       ),
-    );
-  }
-
-  void getImageDialog(BuildContext context){
-    showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text("이미지 가져오기"),
-          content: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child: IconButton(
-                  onPressed: () async {
-                    controller.encodeImageFromCamera();
-                    Navigator.pop(context);
-                  },
-                  iconSize: 100.0,
-                  icon: Icon(Icons.camera_alt_rounded),),
-                ),
-
-                VerticalDivider(color: Colors.black45,),
-
-                Expanded(child: IconButton(
-                  onPressed: () async {
-                    controller.encodeImageFromGallery();
-                    Navigator.pop(context);
-                  },
-                  iconSize: 100.0,
-                  icon: Icon(Icons.image_rounded),),
-                ),
-              ],
-            ),
-          ),
-
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("닫기"),
-            ),
-          ],
-        );
-      },
     );
   }
 

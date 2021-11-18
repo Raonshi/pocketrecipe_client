@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:get/get.dart';
+
 
 class ManualItem extends StatelessWidget {
   int index = 0;
@@ -31,11 +31,8 @@ class ManualItem extends StatelessWidget {
                     border: OutlineInputBorder()
                 ),
                 controller: controller,
-                onChanged: (str){
-                  controller..text = str
-                    ..selection = TextSelection.collapsed(offset: controller.text.length);
-
-                  manual = controller.text;
+                onChanged: (str) {
+                  manual = str;
                 }
             ),
           ),
@@ -76,7 +73,7 @@ class ManualItem extends StatelessWidget {
               children: [
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    controller.encodeImageFromCamera();
+                    controller.encodeImageFromCamera(index);
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -87,7 +84,7 @@ class ManualItem extends StatelessWidget {
 
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    controller.encodeImageFromGallery();
+                    controller.encodeImageFromGallery(index);
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,

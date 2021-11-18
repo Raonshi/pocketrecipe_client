@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/all.dart';
@@ -25,7 +24,10 @@ class Controller extends GetxController{
 
 
   void manualAdd(){
-    manualList.add(ManualItem(index: manualList.length-1));
+    ManualItem item = new ManualItem(index: (manualList.length == 0) ? 0 : manualList.length);
+    item.manual = '';
+    item.image = null;
+    manualList.add(item);
   }
 
   void manualSub(){
@@ -38,22 +40,18 @@ class Controller extends GetxController{
   ///레시피 키워드로 검색하기
   void getRecipeByKeyword(String keyword) async {
     isDone.value = false;
-
     recipeList.clear();
 
     //먼저 공공데이터에서 결과를 가져온다.
     await getRecipeByOpenData(keyword);
-
     //데이터베이스에서 결과를 가져온다.
     getRecipeByDatabase(keyword: keyword);
 
-    Logger().d("${recipeList[0].name}");
     isDone.value = true;
   }
 
 
   Future<void> getRecipeByOpenData(String str) async {
-    //먼저 공공데이터에서 결과를 가져온다.
     dynamic result = await api.getRecipeByKeyword(str);
 
     if(int.parse(result['total_count']) != 0){
@@ -100,14 +98,14 @@ class Controller extends GetxController{
   void getRecipeByDatabase({String keyword="SHOW_MY_RECIPE"}) async {
     List<dynamic> result;
     if(keyword == "SHOW_MY_RECIPE"){
-      result = await api.getRecipeByDatabase(keyword: keyword, author: "admin");
+      String author = await getKakaoEmail();
+      result = await api.getRecipeByDatabase(keyword: keyword, author: author);
     }
     else{
       result = await api.getRecipeByDatabase(keyword: keyword);
     }
 
     if(result.length > 0){
-      Logger().d(result.length);
       for(int i = 0; i < result.length; i++){
         Recipe item = result[i] as Recipe;
 
@@ -115,8 +113,6 @@ class Controller extends GetxController{
         List<String> tmpManualList = [];
         for(int i = 0; i < item.manualList.length; i++){
           String str = item.manualList[i] == null ? "NULL" : item.manualList[i];
-          Logger().d("MSG : ${str}");
-
           tmpManualList.add(str);
         }
 
@@ -125,8 +121,6 @@ class Controller extends GetxController{
         List<String> tmpImgList = [];
         for(int i = 0; i < item.imageList.length; i++){
           String str = item.imageList[i] == null ? "NULL" : item.imageList[i];
-          Logger().d("IMG : ${str}");
-
           tmpImgList.add(str);
         }
 
@@ -170,7 +164,6 @@ class Controller extends GetxController{
 
     Recipe recipe = new Recipe();
 
-
     bool isComplete = await api.updateRecipe(recipe);
 
     isDone.value = true;
@@ -178,21 +171,51 @@ class Controller extends GetxController{
   }
 
 
-
-
   ///카메라를 통한 이미지 로드
-  void encodeImageFromCamera() async {
+  Future<void> encodeImageFromCamera(int type) async {
     ImagePicker picker = ImagePicker();
-    XFile? xFile = await picker.pickImage(source: ImageSource.camera);
-    recipe.value.recipeImg = await imageToBase64(xFile: xFile);
+    final xFile = await picker.pickImage(source: ImageSource.camera) as XFile;
+
+    //레시피 완성 이미지인 경우
+    if(type == 99){
+      recipe.value.recipeImg = await imageToBase64(xFile: xFile);
+    }
+    //레시피 메뉴얼 이미지인 경우
+    else{
+      if(recipe.value.imageList.length <= 0){
+        for(int i = 0; i < 20; i++){
+          recipe.value.imageList.add("Unknown");
+        }
+      }
+
+      recipe.value.imageList[type] = await imageToBase64(xFile: xFile);
+      //ManualItem item = manualList.value[type];
+      //item.image = xFile;
+    }
   }
 
 
   ///갤러리를 통한 이미지 로드
-  void encodeImageFromGallery() async {
+  Future<void> encodeImageFromGallery(int type) async {
     ImagePicker picker = ImagePicker();
     XFile? xFile = await picker.pickImage(source: ImageSource.gallery);
-    recipe.value.recipeImg = await imageToBase64(xFile: xFile);
+
+    //레시피 완성 이미지인 경우
+    if(type == 99){
+      recipe.value.recipeImg = await imageToBase64(xFile: xFile);
+    }
+    //레시피 메뉴얼 이미지인 경우
+    else{
+      if(recipe.value.imageList.isEmpty){
+        for(int i = 0; i < 20; i++){
+          recipe.value.imageList.add("Unknown");
+        }
+      }
+
+      recipe.value.imageList[type] = await imageToBase64(xFile: xFile);
+      //ManualItem item = manualList.value[type];
+      //item.image = xFile;
+    }
   }
 
 
@@ -202,7 +225,6 @@ class Controller extends GetxController{
 
     //패키징
     await recipePackaging();
-    recipe.value.recipeImg = await imageToBase64();
 
     bool isComplete = await api.insertRecipe(recipe.value);
 
@@ -213,22 +235,24 @@ class Controller extends GetxController{
   ///레시피 정보 패키징
   Future<void> recipePackaging() async {
     //작성자 정보 패키징
-
+    recipe.value.author = await getKakaoEmail();
 
     //매뉴얼 설명, 매뉴얼 이미지 패키징
     for(int i = 0; i < 20; i++){
-
       if(i < manualList.length){
         ManualItem item = manualList.value[i];
 
+        Logger().d("MANUAL : ${item.manual}");
+
         item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
-        recipe.value.imageList.add(await imageToBase64(xFile: item.image));
+        //String base64 = await imageToBase64(xFile: item.image);
+        //recipe.value.imageList.add(base64);
       }
       else{
         recipe.value.manualList.add('');
-        recipe.value.imageList.add(await imageToBase64());
+        //String base64 = await imageToBase64(xFile: null);
+        //recipe.value.imageList.add(base64);
       }
-
     }
   }
 
@@ -258,7 +282,20 @@ class Controller extends GetxController{
   }
 
 
-//#region 카카오 계정 연동
+//#region 카카오 계정
+  Future<String> getKakaoEmail() async {
+    String email = 'guest';
+    try{
+      User user = await UserApi.instance.me();
+      if(user.kakaoAccount != null && user.kakaoAccount!.email != null){
+        email = user.kakaoAccount!.email!;
+      }
+    }
+    catch(e){
+      e.printError();
+    }
+    return email;
+  }
 
   Future<void> checkLogin() async {
     OAuthToken token = await TokenManager.instance.getToken();
@@ -285,32 +322,18 @@ class Controller extends GetxController{
   }
 
 
-
   Future<void> initKakaoInstalled() async {
     final installed = await isKakaoTalkInstalled();
-    Logger().d("Kakao Install : ${installed.toString()}");
-
     isKakaoInstalled.value = installed;
   }
 
-  Future<void> _issueAccessToken(String authCode) async {
-    try{
-      AccessTokenResponse token = await AuthApi.instance.issueAccessToken(authCode);
-      TokenManager.instance.setToken(token);
-      Logger().d(token);
-    }
-    catch(e){
-      Logger().d(e.toString());
-    }
-  }
 
   Future<bool> loginWithKakao() async {
     try{
-      var code = await UserApi.instance.loginWithKakaoAccount();
+      await UserApi.instance.loginWithKakaoAccount();
       return true;
     }
     catch(e){
-      Logger().d(e.toString());
       return false;
     }
   }
@@ -318,11 +341,10 @@ class Controller extends GetxController{
 
   Future<bool> loginWithTalk() async {
     try{
-      var code = await UserApi.instance.loginWithKakaoTalk();
+      await UserApi.instance.loginWithKakaoTalk();
       return true;
     }
     catch(e){
-      Logger().d(e.toString());
       return false;
     }
   }
@@ -334,16 +356,16 @@ class Controller extends GetxController{
 
 
 class Recipe{
-  String name = '';
-  String recipeImg;
-  String parts = '';
+  String name = 'Unknown';
+  String recipeImg = 'Unknown';
+  String parts = 'Unknown';
 
-  String energy = '';
-  String natrium = '';
-  String carbohydrate = '';
-  String fat = '';
-  String protein = '';
-  String author = '';
+  String energy = '0';
+  String natrium = '0';
+  String carbohydrate = '0';
+  String fat = '0';
+  String protein = '0';
+  String author = 'Unknown';
 
   List<dynamic> imageList = [];
   List<dynamic> manualList = [];
@@ -355,9 +377,9 @@ class Recipe{
   bool isDelete;
   bool isUpdate;
 
-  Recipe({this.name='', this.recipeImg='', this.parts='',
-    this.energy='', this.carbohydrate='', this.protein='', this.fat='', this.natrium='',
-    this.author='', this.isFavorite=0, this.isDelete=false, this.isUpdate=false});
+  Recipe({this.name='Unknown', this.recipeImg='Unknown', this.parts='Unknown',
+    this.energy='0', this.carbohydrate='0', this.protein='0', this.fat='0', this.natrium='0',
+    this.author='Unknown', this.isFavorite=0, this.isDelete=false, this.isUpdate=false});
 
   void setName(String value) => this.name = value;
   void setImage(String value) => this.recipeImg = value;
@@ -375,7 +397,7 @@ class Recipe{
         imageList.add(value[i]);
       }
       else{
-        imageList.add("http://10.0.2.2:8080/image/view?filePath=" + value[i]);
+        imageList.add("http://220.86.224.184:12000/image/view?filePath=" + value[i]);
       }
     }
   }
@@ -398,7 +420,7 @@ class Recipe{
   }
 
   factory Recipe.fromJson(dynamic json){
-    String imagePath = "http://10.0.2.2:8080/image/view?filePath=";
+    String imagePath = "http://220.86.224.184:12000/image/view?filePath=";
     return Recipe(
       name: json["recipe_name"] as String,
       recipeImg: json['recipe_image'] == "Unknown" ? "Unknown" : imagePath + json['recipe_image'] as String,

@@ -327,7 +327,7 @@ class RecipeUpdate1 extends StatelessWidget {
               children: [
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    controller.encodeImageFromCamera();
+                    controller.encodeImageFromCamera(99);
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -338,7 +338,7 @@ class RecipeUpdate1 extends StatelessWidget {
 
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    controller.encodeImageFromGallery();
+                    controller.encodeImageFromGallery(99);
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
