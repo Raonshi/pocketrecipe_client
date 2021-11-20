@@ -26,7 +26,7 @@ class Controller extends GetxController{
   void manualAdd(){
     ManualItem item = new ManualItem(index: (manualList.length == 0) ? 0 : manualList.length);
     item.manual = '';
-    item.image = null;
+    item.imageBase64 = 'Unknown';
     manualList.add(item);
   }
 
@@ -172,51 +172,25 @@ class Controller extends GetxController{
   }
 
 
-  ///카메라를 통한 이미지 로드
-  Future<void> encodeImageFromCamera(int type) async {
+  ///메뉴얼 이미지 바이트 코드 생성: 테스트 function
+  ///isCam == true : 카메라 촬영
+  ///isCam == false : 갤러리 참조
+  Future<String> encodeManualImage(bool isCam) async {
     ImagePicker picker = ImagePicker();
-    final xFile = await picker.pickImage(source: ImageSource.camera) as XFile;
-
-    //레시피 완성 이미지인 경우
-    if(type == 99){
-      recipe.value.recipeImg = await imageToBase64(xFile: xFile);
-    }
-    //레시피 메뉴얼 이미지인 경우
-    else{
-      if(recipe.value.imageList.length <= 0){
-        for(int i = 0; i < 20; i++){
-          recipe.value.imageList.add("Unknown");
-        }
-      }
-
-      recipe.value.imageList[type] = await imageToBase64(xFile: xFile);
-      //ManualItem item = manualList.value[type];
-      //item.image = xFile;
-    }
+    final xFile = isCam ? await picker.pickImage(source: ImageSource.camera) as XFile : await picker.pickImage(source: ImageSource.gallery) as XFile;
+    String base64 = await imageToBase64(xFile: xFile);
+    return base64;
   }
 
 
-  ///갤러리를 통한 이미지 로드
-  Future<void> encodeImageFromGallery(int type) async {
+  ///레시피 완성 이미지 바이트 코드 생성: 테스트 function
+  ///isCam == true : 카메라 촬영
+  ///isCam == false : 갤러리 참조
+  Future<void> encodeRecipeImage(bool isCam) async {
     ImagePicker picker = ImagePicker();
-    XFile? xFile = await picker.pickImage(source: ImageSource.gallery);
-
-    //레시피 완성 이미지인 경우
-    if(type == 99){
-      recipe.value.recipeImg = await imageToBase64(xFile: xFile);
-    }
-    //레시피 메뉴얼 이미지인 경우
-    else{
-      if(recipe.value.imageList.isEmpty){
-        for(int i = 0; i < 20; i++){
-          recipe.value.imageList.add("Unknown");
-        }
-      }
-
-      recipe.value.imageList[type] = await imageToBase64(xFile: xFile);
-      //ManualItem item = manualList.value[type];
-      //item.image = xFile;
-    }
+    final xFile = isCam ? await picker.pickImage(source: ImageSource.camera) as XFile : await picker.pickImage(source: ImageSource.gallery) as XFile;
+    String base64 = await imageToBase64(xFile: xFile);
+    recipe.value.recipeImg = base64;
   }
 
 
@@ -242,17 +216,14 @@ class Controller extends GetxController{
     for(int i = 0; i < 20; i++){
       if(i < manualList.length){
         ManualItem item = manualList.value[i];
-
         Logger().d("MANUAL : ${item.manual}");
-
-        item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
-        //String base64 = await imageToBase64(xFile: item.image);
-        //recipe.value.imageList.add(base64);
+        //item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
+        recipe.value.manualList.add(item.manual);
+        recipe.value.imageList.add(item.imageBase64);
       }
       else{
         recipe.value.manualList.add('');
-        //String base64 = await imageToBase64(xFile: null);
-        //recipe.value.imageList.add(base64);
+        recipe.value.imageList.add('Unknown');
       }
     }
   }
