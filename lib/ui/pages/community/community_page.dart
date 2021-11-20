@@ -42,7 +42,7 @@ class CommunityPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   controller.recipe.value = new Recipe();
-                  bool goToHome = await Get.to(() => RecipePost());
+                  bool goToHome = await Get.to(() => RecipePost1());
 
                   //등록, 삭제에서 돌아올 경우
                   if(goToHome){

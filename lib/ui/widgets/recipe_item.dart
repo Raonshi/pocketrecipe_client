@@ -38,22 +38,9 @@ class RecipeItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Spacer(),
                 Expanded(
-                    flex : 3,
                     child: Text(recipe.name, textAlign: TextAlign.center, maxLines: 1, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
                 ),
-
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                      onPressed: (){
-                        controller.onClickFavorite(recipe);
-                      },
-                      icon: favorite,
-                  ),
-                ),
-                Spacer(),
               ],
             ),
           ),

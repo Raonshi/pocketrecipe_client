@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
-class RecipePost extends StatelessWidget {
+
+class RecipePost1 extends StatefulWidget {
   final controller = Get.put(Controller());
+
+  @override
+  _RecipePost1State createState() => _RecipePost1State();
+}
+
+class _RecipePost1State extends State<RecipePost1> {
+  Icon icon = Icon(Icons.image_outlined,);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class RecipePost extends StatelessWidget {
                           border: OutlineInputBorder()
                       ),
                       onChanged: (str){
-                        controller.recipe.value.setName(str);
+                        widget.controller.recipe.value.setName(str);
                       }
                   ),
                 ),
@@ -51,7 +58,7 @@ class RecipePost extends StatelessWidget {
                   getImageDialog(context);
                 },
                 iconSize: 150.0,
-                icon: (controller.recipe.value.recipeImg == null) ? Icon(Icons.image_outlined) : Icon(Icons.image_rounded),
+                icon: icon,
                 tooltip: "이미지 업로드",
               ),
             ],
@@ -71,7 +78,7 @@ class RecipePost extends StatelessWidget {
                           border: OutlineInputBorder()
                       ),
                       onChanged: (str){
-                        controller.recipe.value.setEnergy(str);
+                        widget.controller.recipe.value.setEnergy(str);
                       }
                   ),
                 ),
@@ -86,7 +93,7 @@ class RecipePost extends StatelessWidget {
                           border: OutlineInputBorder()
                       ),
                       onChanged: (str){
-                        controller.recipe.value.setNa(str);
+                        widget.controller.recipe.value.setNa(str);
                       }
                   ),
                 ),
@@ -108,7 +115,7 @@ class RecipePost extends StatelessWidget {
                           border: OutlineInputBorder()
                       ),
                       onChanged: (str){
-                        controller.recipe.value.setCal(str);
+                        widget.controller.recipe.value.setCal(str);
                       }
                   ),
                 ),
@@ -130,7 +137,7 @@ class RecipePost extends StatelessWidget {
                           border: OutlineInputBorder()
                       ),
                       onChanged: (str){
-                        controller.recipe.value.setFat(str);
+                        widget.controller.recipe.value.setFat(str);
                       }
                   ),
                 ),
@@ -152,7 +159,7 @@ class RecipePost extends StatelessWidget {
                           border: OutlineInputBorder()
                       ),
                       onChanged: (str){
-                        controller.recipe.value.setPro(str);
+                        widget.controller.recipe.value.setPro(str);
                       }
                   ),
                 ),
@@ -165,12 +172,15 @@ class RecipePost extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  bool goToHome = await Get.to(() => RecipePost2());
-                  if(goToHome){Get.back(result: true);}
-                },
-                child: Text("다음"),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    bool goToHome = await Get.to(() => RecipePost2());
+                    if(goToHome){Get.back(result: true);}
+                  },
+                  child: Text("다음"),
+                ),
               ),
             ],
           ),
@@ -192,7 +202,12 @@ class RecipePost extends StatelessWidget {
                 Expanded(child: IconButton(
                   onPressed: () async {
                     //await controller.encodeImageFromCamera(99);
-                    await controller.encodeRecipeImage(true);
+                    await widget.controller.encodeRecipeImage(true);
+                    setState(() {
+                      if(widget.controller.recipe.value.recipeImg != 'Unknown'){
+                        icon = Icon(Icons.image_rounded,);
+                      }
+                    });
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -204,7 +219,12 @@ class RecipePost extends StatelessWidget {
                 Expanded(child: IconButton(
                   onPressed: () async {
                     //controller.encodeImageFromGallery(99);
-                    await controller.encodeRecipeImage(true);
+                    await widget.controller.encodeRecipeImage(true);
+                    setState(() {
+                      if(widget.controller.recipe.value.recipeImg != 'Unknown'){
+                        icon = Icon(Icons.image_rounded,);
+                      }
+                    });
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -229,9 +249,6 @@ class RecipePost extends StatelessWidget {
 
 class RecipePost2 extends StatelessWidget {
   final controller = Get.put(Controller());
-
-  //List<ManualItem> manualList = [];
-  List<XFile> imageList = [];
 
   @override
   Widget build(BuildContext context) {

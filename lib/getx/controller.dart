@@ -197,12 +197,9 @@ class Controller extends GetxController{
   ///레시피 등록
   Future<bool> recipePosting() async {
     isDone.value = false;
-
     //패키징
     await recipePackaging();
-
     bool isComplete = await api.insertRecipe(recipe.value);
-
     isDone.value = true;
     return isComplete;
   }
@@ -240,19 +237,6 @@ class Controller extends GetxController{
       return base64.encode(file.readAsBytesSync());
     }
   }
-
-
-  Future<void> onClickFavorite(Recipe recipe) async {
-    if(recipe.isFavorite == 1){
-      recipe.isFavorite = 2;
-      return;
-    }
-    else if(recipe.isFavorite == 2){
-      recipe.isFavorite = 1;
-    }
-    return;
-  }
-
 
 //#region 카카오 계정
   Future<String> getKakaoEmail() async {
