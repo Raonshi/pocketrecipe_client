@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
+import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
 
 class RecipeUpdate extends StatefulWidget {
   const RecipeUpdate({Key? key}) : super(key: key);
@@ -9,6 +10,7 @@ class RecipeUpdate extends StatefulWidget {
   @override
   _RecipeUpdateState createState() => _RecipeUpdateState();
 }
+
 
 class _RecipeUpdateState extends State<RecipeUpdate> {
   final controller = Get.put(Controller());
@@ -74,7 +76,6 @@ class _RecipeUpdateState extends State<RecipeUpdate> {
               flex: 1,
               child: ElevatedButton(
                 onPressed: () async {
-                  //bool isComplete = await controller.updateRecipe();
                   bool isComplete = await Get.to(RecipeUpdate1());
 
                   bool goToHome = false;
@@ -130,18 +131,22 @@ class _RecipeUpdateState extends State<RecipeUpdate> {
 }
 
 
-
-
-
-class RecipeUpdate1 extends StatelessWidget {
+class RecipeUpdate1 extends StatefulWidget {
   final controller = Get.put(Controller());
+
+  @override
+  _RecipeUpdate1State createState() => _RecipeUpdate1State();
+}
+
+class _RecipeUpdate1State extends State<RecipeUpdate1> {
+  Icon icon = Icon(Icons.image_rounded,);
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("레시피 수정"),
+        title: Text("레시피 수"),
       ),
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -157,13 +162,13 @@ class RecipeUpdate1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: TextFormField(
-                    initialValue: controller.recipe.value.name,
+                    initialValue: widget.controller.recipe.value.name,
                     decoration: InputDecoration(
                         hintText: "레시피 이름",
                         border: OutlineInputBorder()
                     ),
                     onChanged: (str){
-                      controller.recipe.value.setName(str);
+                      widget.controller.recipe.value.setName(str);
                     },
                   ),
                 ),
@@ -182,7 +187,7 @@ class RecipeUpdate1 extends StatelessWidget {
                   getImageDialog(context);
                 },
                 iconSize: 150.0,
-                icon: (controller.recipe.value.recipeImg == null) ? Icon(Icons.image_outlined) : Icon(Icons.image_rounded),
+                icon: icon,
                 tooltip: "이미지 업로드",
               ),
             ],
@@ -197,14 +202,14 @@ class RecipeUpdate1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: TextFormField(
-                    initialValue: controller.recipe.value.energy,
-                    decoration: InputDecoration(
-                        hintText: "칼로리(kcal)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setEnergy(str);
-                    }
+                      initialValue: widget.controller.recipe.value.energy,
+                      decoration: InputDecoration(
+                          hintText: "칼로리(kcal)",
+                          border: OutlineInputBorder()
+                      ),
+                      onChanged: (str){
+                        widget.controller.recipe.value.setEnergy(str);
+                      }
                   ),
                 ),
               ),
@@ -213,14 +218,14 @@ class RecipeUpdate1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: TextFormField(
-                    initialValue: controller.recipe.value.natrium,
-                    decoration: InputDecoration(
-                        hintText: "나트륨(mg)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setNa(str);
-                    }
+                      initialValue: widget.controller.recipe.value.natrium,
+                      decoration: InputDecoration(
+                          hintText: "나트륨(mg)",
+                          border: OutlineInputBorder()
+                      ),
+                      onChanged: (str){
+                        widget.controller.recipe.value.setNa(str);
+                      }
                   ),
                 ),
               ),
@@ -236,14 +241,14 @@ class RecipeUpdate1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: TextFormField(
-                    initialValue: controller.recipe.value.carbohydrate,
-                    decoration: InputDecoration(
-                        hintText: "탄수화물(g)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setCal(str);
-                    }
+                      initialValue: widget.controller.recipe.value.carbohydrate,
+                      decoration: InputDecoration(
+                          hintText: "탄수화물(g)",
+                          border: OutlineInputBorder()
+                      ),
+                      onChanged: (str){
+                        widget.controller.recipe.value.setCal(str);
+                      }
                   ),
                 ),
               )
@@ -259,14 +264,14 @@ class RecipeUpdate1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: TextFormField(
-                    initialValue: controller.recipe.value.fat,
-                    decoration: InputDecoration(
-                        hintText: "지방(g)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setFat(str);
-                    }
+                      initialValue: widget.controller.recipe.value.fat,
+                      decoration: InputDecoration(
+                          hintText: "지방(g)",
+                          border: OutlineInputBorder()
+                      ),
+                      onChanged: (str){
+                        widget.controller.recipe.value.setFat(str);
+                      }
                   ),
                 ),
               )
@@ -282,14 +287,14 @@ class RecipeUpdate1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: TextFormField(
-                    initialValue: controller.recipe.value.protein,
-                    decoration: InputDecoration(
-                        hintText: "단백질(g)",
-                        border: OutlineInputBorder()
-                    ),
-                    onChanged: (str){
-                      controller.recipe.value.setPro(str);
-                    }
+                      initialValue: widget.controller.recipe.value.protein,
+                      decoration: InputDecoration(
+                          hintText: "단백질(g)",
+                          border: OutlineInputBorder()
+                      ),
+                      onChanged: (str){
+                        widget.controller.recipe.value.setPro(str);
+                      }
                   ),
                 ),
               )
@@ -301,12 +306,15 @@ class RecipeUpdate1 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  bool goToHome = await Get.to(() => RecipeUpdate2());
-                  if(goToHome){Get.back(result: true);}
-                },
-                child: Text("다음"),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    bool goToHome = await Get.to(() => RecipeUpdate2());
+                    if(goToHome){Get.back(result: true);}
+                  },
+                  child: Text("다음"),
+                ),
               ),
             ],
           ),
@@ -327,8 +335,12 @@ class RecipeUpdate1 extends StatelessWidget {
               children: [
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    //controller.encodeImageFromCamera(99);
-                    await controller.encodeRecipeImage(true);
+                    await widget.controller.encodeRecipeImage(true);
+                    setState(() {
+                      if(widget.controller.recipe.value.recipeImg != 'Unknown'){
+                        icon = Icon(Icons.image_rounded,);
+                      }
+                    });
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -339,8 +351,12 @@ class RecipeUpdate1 extends StatelessWidget {
 
                 Expanded(child: IconButton(
                   onPressed: () async {
-                    //controller.encodeImageFromGallery(99);
-                    await controller.encodeRecipeImage(true);
+                    await widget.controller.encodeRecipeImage(true);
+                    setState(() {
+                      if(widget.controller.recipe.value.recipeImg != 'Unknown'){
+                        icon = Icon(Icons.image_rounded,);
+                      }
+                    });
                     Navigator.pop(context);
                   },
                   iconSize: 100.0,
@@ -363,20 +379,24 @@ class RecipeUpdate1 extends StatelessWidget {
 }
 
 
-
 class RecipeUpdate2 extends StatelessWidget {
   final controller = Get.put(Controller());
 
-  //List<ManualItem> manualList = [];
-  List<XFile> imageList = [];
-
   @override
   Widget build(BuildContext context) {
-    controller.manualAdd();
-    controller.manualAdd();
+    Recipe recipe = controller.recipe.value;
+    List<ManualItem> list = [];
+    for(int i = 0; i < recipe.manualList.length; i++){
+      ManualItem item = ManualItem();
+      item.manual = recipe.manualList[i];
+      item.imageBase64 = 'Unknown';
+      list.add(item);
+    }
+    controller.manualList.value = list;
+
 
     return Scaffold(
-      appBar: AppBar(title: Text("레시피 등록"),),
+      appBar: AppBar(title: Text("레시피 수정"),),
       resizeToAvoidBottomInset: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

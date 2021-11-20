@@ -162,9 +162,7 @@ class Controller extends GetxController{
   ///레시피 수정
   Future<bool> updateRecipe() async {
     isDone.value = false;
-
     Recipe recipe = new Recipe();
-
     bool isComplete = await api.updateRecipe(recipe);
 
     isDone.value = true;
