@@ -7,22 +7,31 @@ import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/api.dart';
 import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:pocketrecipe_client/data_define.dart';
 
 class Controller extends GetxController{
+
+  ///Restful API 사용을 위한 인터넷 접속 객체
   API api = new API();
+
+  ///레시피 객체
   var recipeList = <Recipe>[].obs;
   Rx<Recipe> recipe = Recipe().obs;
+
+  ///앱 화면 전환 카운트
   RxInt centerPageSelect = 1.obs;
+
+  ///레시피 등록 시 사용되는 매뉴얼 항목
   RxList manualList = <ManualItem>[].obs;
 
-  //온라인 작업 완료 여부 : 기본 값은 true
+  ///온라인 작업 완료 여부 : 기본 값은 true
   RxBool isDone = true.obs;
 
-  //카카오 설치 여부 확인
+  ///카카오 설치 여부 확인
   RxBool isKakaoInstalled = false.obs;
   RxBool isLogin = false.obs;
 
-
+  ///매뉴얼 항목 추가
   void manualAdd(){
     ManualItem item = new ManualItem(index: (manualList.length == 0) ? 0 : manualList.length);
     item.manual = '';
@@ -30,14 +39,20 @@ class Controller extends GetxController{
     manualList.add(item);
   }
 
+  ///매뉴얼 항목 삭제
   void manualSub(){
     manualList.removeLast();
   }
 
+  ///신규 레시피 데이터 생성
   void generateRecipe() => this.recipe = new Recipe().obs;
 
 
-  ///레시피 키워드로 검색하기
+//#region 레시피 검색/등록/삭제/수정
+  ///<h2>레시피 키워드로 검색하기</h2>
+  ///<p>매개변수 [keyword]가 포함된 레시피 정보를 조회한다.</p>
+  ///<p>param: String keyword</p>
+  ///<p>return: void</p>
   void getRecipeByKeyword(String keyword) async {
     isDone.value = false;
     recipeList.clear();
@@ -51,8 +66,12 @@ class Controller extends GetxController{
   }
 
 
-  Future<void> getRecipeByOpenData(String str) async {
-    dynamic result = await api.getRecipeByKeyword(str);
+  ///<h2>공공데이터 레시피 데이터 조회</h2>
+  ///<p>식품안전나라 레시피 공공데이터에서 매개변수 [keyword]이 포함된 레시피 정보를 조회한다.</p>
+  ///<p>params: String keyword</p>
+  ///<p>return: void</p>
+  Future<void> getRecipeByOpenData(String keyword) async {
+    dynamic result = await api.getRecipeByKeyword(keyword);
 
     if(int.parse(result['total_count']) != 0){
       for(int i = 0; i < result['row'].length; i++){
@@ -88,13 +107,16 @@ class Controller extends GetxController{
 
         recipe.manualList = tmpManualList;
         recipe.imageList = tmpImgList;
-
         recipeList.add(recipe);
       }
     }
   }
 
 
+  ///<h2>서버 레시피 데이터 조회</h2>
+  ///<p>서버 데이터 베이스에서 매개변수 [keyword]이 포함된 레시피 정보를 조회한다.</p>
+  ///<p>params: String keyword</p>
+  ///<p>return: void</p>
   void getRecipeByDatabase({String keyword="SHOW_MY_RECIPE"}) async {
     List<dynamic> result;
     if(keyword == "SHOW_MY_RECIPE"){
@@ -116,7 +138,6 @@ class Controller extends GetxController{
           tmpManualList.add(str);
         }
 
-
         //DB 레시피의 메뉴얼 이미지를 리스트로 변환
         List<String> tmpImgList = [];
         for(int i = 0; i < item.imageList.length; i++){
@@ -126,18 +147,19 @@ class Controller extends GetxController{
 
         item.manualList = tmpManualList;
         item.imageList = tmpImgList;
-
         recipeList.add(item);
       }
     }
   }
 
 
-  ///레시피 삭제
+  ///<h2>서버 레시피 데이터 삭제</h2>
+  ///<p>사용자가 선택한 레시피들이 저장된 [recipeList]를 참조한다.</p>
+  ///<p>[recipeList]에 포함된 레시피 데이터를 서버에서 삭제한다.</p>
+  ///<p>return: bool</p>
   Future<bool> deleteRecipe() async {
     isDone.value = false;
     String author = await getKakaoEmail();
-
     List<Recipe> deleteList = [];
     int count = 0;
 
@@ -153,23 +175,64 @@ class Controller extends GetxController{
     json.setCount(count);
 
     bool isComplete = await api.deleteRecipe(json, author);
-
     isDone.value = true;
     return isComplete;
   }
 
 
-  ///레시피 수정
+  ///<h2>서버 레시피 데이터 수정</h2>
+  ///<p>사용자가 선택한 [Recipe]의 정보를 수정한다.</p>
+  ///<p>수정된 결과를 서버로 보내 갱신한다.</p>
+  ///<p>return: bool</p>
   Future<bool> updateRecipe() async {
     isDone.value = false;
     Recipe recipe = new Recipe();
-    bool isComplete = await api.updateRecipe(recipe);
 
+    bool isComplete = await api.updateRecipe(recipe);
     isDone.value = true;
     return isComplete;
   }
 
 
+  ///<h2>서버 레시피 데이터 등록</h2>
+  ///<p>사용자가 작성한 [Recipe]의 정보를 서버 데이터베이스에 등록한다.</p>
+  ///<p>return: bool</p>
+  Future<bool> recipePosting() async {
+    isDone.value = false;
+    //패키징
+    await recipePackaging();
+    bool isComplete = await api.insertRecipe(recipe.value);
+    isDone.value = true;
+    return isComplete;
+  }
+
+
+  ///<h2>레시피 정보 직렬화</h2>
+  ///<p>사용자가 작성한 레시피 정보를 JSON형식으로 직렬화한다.</p>
+  ///<p>return: void</p>
+  Future<void> recipePackaging() async {
+    //작성자 정보 패키징
+    recipe.value.author = await getKakaoEmail();
+
+    //매뉴얼 설명, 매뉴얼 이미지 패키징
+    for(int i = 0; i < 20; i++){
+      if(i < manualList.length){
+        ManualItem item = manualList.value[i];
+        Logger().d("MANUAL : ${item.manual}");
+        //item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
+        recipe.value.manualList.add(item.manual);
+        recipe.value.imageList.add(item.imageBase64);
+      }
+      else{
+        recipe.value.manualList.add('');
+        recipe.value.imageList.add('Unknown');
+      }
+    }
+  }
+//endregion
+
+
+//#region 이미지 처리
   ///메뉴얼 이미지 바이트 코드 생성: 테스트 function
   ///isCam == true : 카메라 촬영
   ///isCam == false : 갤러리 참조
@@ -192,37 +255,6 @@ class Controller extends GetxController{
   }
 
 
-  ///레시피 등록
-  Future<bool> recipePosting() async {
-    isDone.value = false;
-    //패키징
-    await recipePackaging();
-    bool isComplete = await api.insertRecipe(recipe.value);
-    isDone.value = true;
-    return isComplete;
-  }
-
-  ///레시피 정보 패키징
-  Future<void> recipePackaging() async {
-    //작성자 정보 패키징
-    recipe.value.author = await getKakaoEmail();
-
-    //매뉴얼 설명, 매뉴얼 이미지 패키징
-    for(int i = 0; i < 20; i++){
-      if(i < manualList.length){
-        ManualItem item = manualList.value[i];
-        Logger().d("MANUAL : ${item.manual}");
-        //item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
-        recipe.value.manualList.add(item.manual);
-        recipe.value.imageList.add(item.imageBase64);
-      }
-      else{
-        recipe.value.manualList.add('');
-        recipe.value.imageList.add('Unknown');
-      }
-    }
-  }
-
   ///이미지 파일을 base64코드로 변환
   Future<String> imageToBase64({XFile? xFile}) async {
     //이미지가 없을 경우
@@ -235,8 +267,12 @@ class Controller extends GetxController{
       return base64.encode(file.readAsBytesSync());
     }
   }
+//#endregion
+
 
 //#region 카카오 계정
+  ///<h2>연동된 카카오 계정에서 이메일 정보 조회</h2>
+  ///<p>레시피 등록시 레시피의 작성자를 확인하기 위한 용도로 사용함</p>
   Future<String> getKakaoEmail() async {
     String email = 'guest';
 
@@ -253,6 +289,9 @@ class Controller extends GetxController{
     return email;
   }
 
+
+  ///<h2>카카오 로그인 여부 확인</h2>
+  ///<p>이미 로그인 되어 있는지 확인한다.</p>
   Future<void> checkLogin() async {
     OAuthToken token = await TokenManager.instance.getToken();
 
@@ -265,6 +304,8 @@ class Controller extends GetxController{
   }
 
 
+  ///<h2>카카오 로그인</h2>
+  ///<p>로그인 과정을 수행한다.</p>
   Future<void> kakaoLogin() async {
     await initKakaoInstalled();
     if(isKakaoInstalled.value){
@@ -276,12 +317,16 @@ class Controller extends GetxController{
   }
 
 
+  ///<h2>카카오톡 설치 확인</h2>
+  ///<p>클라이언트에 카카오톡 앱이 설치되어 있는지 확인한다.</p>
   Future<void> initKakaoInstalled() async {
     final installed = await isKakaoTalkInstalled();
     isKakaoInstalled.value = installed;
   }
 
 
+  ///<h2>카카오 웹페이지 로그인</h2>
+  ///<p>웹페이지를 통해 카카오 계정으로 로그인한다.</p>
   Future<bool> loginWithKakao() async {
     try{
       await UserApi.instance.loginWithKakaoAccount();
@@ -293,6 +338,8 @@ class Controller extends GetxController{
   }
 
 
+  ///<h2>카카오톡 로그인</h2>
+  ///<p>클라이언트에 설치되어 있는 카카오톡 앱을 통해 로그인한다.</p>
   Future<bool> loginWithTalk() async {
     try{
       await UserApi.instance.loginWithKakaoTalk();
@@ -302,112 +349,5 @@ class Controller extends GetxController{
       return false;
     }
   }
-
 //#endregion
-
-
-}
-
-
-class Recipe{
-  String name = 'Unknown';
-  String recipeImg = 'Unknown';
-  String parts = 'Unknown';
-
-  String energy = '0';
-  String natrium = '0';
-  String carbohydrate = '0';
-  String fat = '0';
-  String protein = '0';
-  String author = 'Unknown';
-
-  List<dynamic> imageList = [];
-  List<dynamic> manualList = [];
-
-  //0 : 공공데이터 -> 좋아요 없음
-  //1 : 좋아요 눌림
-  //2 : 좋아요 안눌림
-  int isFavorite;
-  bool isDelete;
-  bool isUpdate;
-
-  Recipe({this.name='Unknown', this.recipeImg='Unknown', this.parts='Unknown',
-    this.energy='0', this.carbohydrate='0', this.protein='0', this.fat='0', this.natrium='0',
-    this.author='Unknown', this.isFavorite=0, this.isDelete=false, this.isUpdate=false});
-
-  void setName(String value) => this.name = value;
-  void setImage(String value) => this.recipeImg = value;
-  void setParts(String value) => this.parts = value;
-  void setEnergy(String value) => this.energy = value;
-  void setCal(String value) => this.carbohydrate = value;
-  void setPro(String value) => this.protein = value;
-  void setFat(String value) => this.fat = value;
-  void setNa(String value) => this.natrium = value;
-  void setManualList(List<dynamic> value) => this.manualList = value;
-  void setImageList(List<dynamic> value) {
-
-    for(int i = 0; i < value.length; i++){
-      if(value[i] == "Unknown"){
-        imageList.add(value[i]);
-      }
-      else{
-        imageList.add("http://220.86.224.184:12000/image/view?filePath=" + value[i]);
-      }
-    }
-  }
-
-
-  Map<String, dynamic> toJson(String author){
-    return {
-      "recipe_name" : name,
-      "recipe_image" : recipeImg,
-      "recipe_parts" : parts,
-      "recipe_energy" : energy,
-      "recipe_cal" : carbohydrate,
-      "recipe_pro" : protein,
-      "recipe_fat" : fat,
-      "recipe_nat" : natrium,
-      "recipe_manual" : manualList,
-      "recipe_manual_image" : imageList,
-      "recipe_author" : author,
-    };
-  }
-
-  factory Recipe.fromJson(dynamic json){
-    String imagePath = "http://220.86.224.184:12000/image/view?filePath=";
-    return Recipe(
-      name: json["recipe_name"] as String,
-      recipeImg: json['recipe_image'] == "Unknown" ? "Unknown" : imagePath + json['recipe_image'] as String,
-      parts: "",
-      energy: json['recipe_eng'].toString(),
-      carbohydrate: json['recipe_cal'].toString(),
-      protein: json['recipe_pro'].toString(),
-      fat: json['recipe_fat'].toString(),
-      natrium: json['recipe_nat'].toString(),
-      author: json['recipe_author'] as String,
-    );
-  }
-}
-
-class RecipeListJson {
-  int count = 0;
-  void setCount(int value){this.count = value;}
-
-  List<Recipe> recipeList = [];
-  void setRecipeList(List<Recipe> recipeList){this.recipeList = recipeList;}
-
-  Map<String, dynamic> toJson(String author) {
-    List<dynamic> jsonList = [];
-
-    for(int i = 0; i < recipeList.length; i++){
-      Recipe recipe = recipeList[i];
-      Map<String, dynamic> json = recipe.toJson(author);
-      jsonList.add(json);
-    }
-
-    return {
-      "count" : count,
-      "recipeList" : jsonList,
-    };
-  }
 }

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:logger/logger.dart';
-import 'getx/controller.dart';
+import 'package:pocketrecipe_client/data_define.dart';
 
 
 class API{

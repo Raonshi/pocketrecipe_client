@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
+import 'package:pocketrecipe_client/data_define.dart';
+
 
 class RecipeSearch extends StatelessWidget {
   final controller = Get.put(Controller());

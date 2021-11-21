@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
+import 'package:pocketrecipe_client/data_define.dart';
 
 
 class RecipeItem extends StatelessWidget {

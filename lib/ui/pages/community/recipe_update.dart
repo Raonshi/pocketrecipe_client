@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
+import 'package:pocketrecipe_client/data_define.dart';
 
 class RecipeUpdate extends StatefulWidget {
   const RecipeUpdate({Key? key}) : super(key: key);

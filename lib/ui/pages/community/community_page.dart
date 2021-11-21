@@ -5,6 +5,7 @@ import 'package:pocketrecipe_client/ui/pages/community/recipe_delete.dart';
 import 'package:pocketrecipe_client/ui/pages/community/recipe_post.dart';
 import 'package:pocketrecipe_client/ui/pages/community/recipe_update.dart';
 import 'package:pocketrecipe_client/ui/widgets/recipe_item.dart';
+import 'package:pocketrecipe_client/data_define.dart';
 
 
 class CommunityPage extends StatelessWidget {
