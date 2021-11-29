@@ -219,7 +219,6 @@ class Controller extends GetxController{
       if(i < manualList.length){
         ManualItem item = manualList.value[i];
         Logger().d("MANUAL : ${item.manual}");
-        //item.manual == '' ? recipe.value.manualList.add('') : recipe.value.manualList.add(item.manual);
         recipe.value.manualList.add(item.manual);
         recipe.value.imageList.add(item.imageBase64);
       }
