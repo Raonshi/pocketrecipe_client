@@ -43,8 +43,17 @@ class Language extends Translations {
 
           //button
           'next': '다음',
+          'prev': '이전',
+          'post': '등록',
+          'manual_add': '메뉴얼 추가',
+          'manual_sub': '메뉴얼 삭제',
 
-          //info
+          //sanck bar
+          'manual_full': '더 이상 메뉴얼을 추가할 수 없습니다.',
+          'manual_empty': '더 이상 메뉴얼을 삭제할 수 없습니다.',
+
+          //manual item
+          'manual_item_hint': '메뉴얼 설명(100자 이내)',
         },
       };
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/controllers/home_ctrl.dart';
 import 'package:pocketrecipe_client/ui/pages/menu/menu_page.dart';
-import 'package:pocketrecipe_client/ui/pages/menu/recipe_post.dart';
+import 'package:pocketrecipe_client/ui/pages/menu/recipe_post_page.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe/recipe_search_page.dart';
 import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
 
