@@ -21,3 +21,10 @@ OutlineInputBorder outLineInputBorder = OutlineInputBorder(
   borderSide: BorderSide(color: Colors.lightGreen),
   borderRadius: BorderRadius.all(Radius.circular(20)),
 );
+
+ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+  primary: Colors.lightGreen,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20),
+  ),
+);

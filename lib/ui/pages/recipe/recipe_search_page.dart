@@ -94,12 +94,7 @@ class _SearchWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.lightGreen,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
+              style: buttonStyle,
               onPressed: () {
                 controller.getRecipeByKeyword();
               },

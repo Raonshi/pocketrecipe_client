@@ -38,10 +38,10 @@ class Recipe {
   void setImage(String value) => this.recipeImg = value;
   void setParts(String value) => this.parts = value;
   void setEnergy(String value) => this.energy = value;
-  void setCal(String value) => this.carbohydrate = value;
+  void setCar(String value) => this.carbohydrate = value;
   void setPro(String value) => this.protein = value;
   void setFat(String value) => this.fat = value;
-  void setNa(String value) => this.natrium = value;
+  void setNat(String value) => this.natrium = value;
   void setManualList(List<dynamic> value) => this.manualList = value;
   void setImageList(List<dynamic> value) => this.imageList = value;
 

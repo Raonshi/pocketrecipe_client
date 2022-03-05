@@ -13,16 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "pocket_recipe".tr,
-          style: TextStyle(
-            fontSize: 30,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      appBar: AppBar(title: Text("pocket_recipe".tr)),
       body: PageView(
         controller: controller.pageController,
         physics: NeverScrollableScrollPhysics(),
@@ -40,7 +31,7 @@ class HomePage extends StatelessWidget {
           child: FloatingActionButton(
             backgroundColor: Colors.lightGreen,
             child: Icon(Icons.add, size: 35),
-            onPressed: () => Get.to(RecipePost1()),
+            onPressed: () => Get.to(RecipePostPage()),
           ),
         ),
       ),
