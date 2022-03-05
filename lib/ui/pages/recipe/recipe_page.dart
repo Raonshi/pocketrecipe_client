@@ -29,6 +29,30 @@ class RecipePage extends StatelessWidget {
                     ),
             ),
 
+            Row(
+              children: [
+                IconButton(
+                  constraints: BoxConstraints(),
+                  splashRadius: 20,
+                  icon: Icon(
+                    Icons.favorite,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () {},
+                ),
+                Text(
+                  "+120k likes",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Spacer(),
+                Text(
+                  "superCheif",
+                  maxLines: 1,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+
             Divider(),
 
             //재료
@@ -164,30 +188,24 @@ class RecipePage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            //리스트뷰로 만들어야할듯
-            Expanded(
-              flex: 8,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: recipe.manualList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Divider(),
-                      recipe.imageList.length > index
-                          ? (recipe.imageList[index] == "Unknown"
-                              ? Text("<이미지가 없습니다>")
-                              : Image.network("${recipe.imageList[index]}"))
-                          : Text("<이미지가 없습니다>"),
-                      recipe.manualList.length > index
-                          ? Text(recipe.manualList[index])
-                          : Text("<설명이 없습니다>"),
-                      Divider(),
-                    ],
-                  );
-                },
+            Column(
+              children: List.generate(
+                recipe.manualList.isEmpty ? 20 : recipe.manualList.length,
+                (index) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Divider(),
+                    recipe.imageList.length > index
+                        ? (recipe.imageList[index] == "Unknown"
+                            ? Text("<이미지가 없습니다>")
+                            : Image.network("${recipe.imageList[index]}"))
+                        : Text("<이미지가 없습니다>"),
+                    recipe.manualList.length > index
+                        ? Text(recipe.manualList[index])
+                        : Text("<설명이 없습니다>"),
+                    Divider(),
+                  ],
+                ),
               ),
             ),
           ],
