@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/controllers/recipe_search_ctrl.dart';
 import 'package:pocketrecipe_client/etc/data_define.dart';
+import 'package:pocketrecipe_client/etc/style.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe/recipe_page.dart';
 
@@ -69,11 +70,18 @@ class _SearchWidget extends StatelessWidget {
               child: TextField(
                 controller: controller.searchController,
                 maxLines: 1,
+                cursorColor: Colors.lightGreen,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  suffixIcon: IconButton(
+                    onPressed: () => controller.searchController.clear(),
+                    icon: Icon(
+                      Icons.highlight_remove,
+                      color: Colors.grey,
+                    ),
                   ),
-                  hintText: "요리명 / 요리재료",
+                  border: outLineInputBorder,
+                  focusedBorder: outLineInputBorder,
+                  hintText: 'search_hint'.tr,
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 5.0, horizontal: 10.0),
                 ),
@@ -86,11 +94,10 @@ class _SearchWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.resolveWith(
-                  (states) => RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
               ),
               onPressed: () {
@@ -99,7 +106,7 @@ class _SearchWidget extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0),
                 child: Text(
-                  "검색",
+                  "recipe_search".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

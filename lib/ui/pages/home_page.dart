@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/controllers/home_ctrl.dart';
 import 'package:pocketrecipe_client/ui/pages/menu/menu_page.dart';
+import 'package:pocketrecipe_client/ui/pages/menu/recipe_post.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe/recipe_search_page.dart';
 import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
 
@@ -15,7 +16,11 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "pocket_recipe".tr,
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: PageView(
@@ -28,8 +33,20 @@ class HomePage extends StatelessWidget {
           SettingPage(),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Obx(
+        () => Visibility(
+          visible: controller.bottomIndex == 0 ? true : false,
+          child: FloatingActionButton(
+            backgroundColor: Colors.lightGreen,
+            child: Icon(Icons.add, size: 35),
+            onPressed: () => Get.to(RecipePost1()),
+          ),
+        ),
+      ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
+          selectedItemColor: Colors.lightGreen,
           onTap: (value) {
             controller.bottomIndex = value;
             controller.pageController.jumpToPage(value);

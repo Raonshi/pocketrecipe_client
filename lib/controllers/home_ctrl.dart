@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeCtrl extends GetxController {
-  final _pageController = PageController().obs;
+  final _pageController = PageController(initialPage: 1).obs;
   get pageController => _pageController.value;
 
   final _bottomIndex = 1.obs;

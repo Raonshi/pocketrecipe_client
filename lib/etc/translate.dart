@@ -10,10 +10,15 @@ class Language extends Translations {
           'setting': 'setting',
         },
         'ko_KR': {
+          //title
           'pocket_recipe': '포켓 레시피',
+
+          //page name
           'recipe_search': '검색',
           'menu': '메뉴',
           'setting': '설정',
+
+          //menu
           'korean_food': '한식',
           'japanese_food': '일식',
           'chinese_food': '중식',
@@ -22,6 +27,9 @@ class Language extends Translations {
           'chicken': '치킨',
           'snack': '분식',
           'dessert': '간식',
+
+          //system message
+          'search_hint': '요리명 / 요리재료',
         },
       };
 }
