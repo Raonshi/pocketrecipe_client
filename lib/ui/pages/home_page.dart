@@ -14,7 +14,10 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Obx(
-          () => Text(controller.appBarTitle[controller.bottomIndex]),
+          () => Text(
+            controller.appBarTitle[controller.bottomIndex],
+            style: TextStyle(fontSize: 25),
+          ),
         ),
       ),
       body: PageView(

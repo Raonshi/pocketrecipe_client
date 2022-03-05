@@ -38,8 +38,8 @@ class RecipeSearchPage extends StatelessWidget {
                         child: _RecipeItemWidget(
                           recipe: controller.searchResult[index],
                         ),
-                        onTap: () => Get.to(
-                            () => RecipePage(controller.searchResult[index])),
+                        onTap: () => Get.to(() => RecipePage(),
+                            arguments: controller.searchResult[index]),
                       ),
                     );
                   }),

@@ -1,45 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pocketrecipe_client/data_define.dart';
 
 class RecipePage extends StatelessWidget {
-  Recipe recipe;
-  RecipePage(this.recipe);
+  RecipePage();
+  Recipe recipe = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(recipe.name),
+        title: Text(recipe.name, style: TextStyle(fontSize: 25)),
       ),
       body: Container(
         padding: EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
+        child: ListView(
           children: [
             //완성 이미지
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  recipe.recipeImg == "Unknown"
-                      ? Image.asset("data/warning.jpeg")
-                      : Image.network("${recipe.recipeImg}"),
-                ],
-              ),
+            ClipRRect(
+              child: recipe.recipeImg == "Unknown"
+                  ? Image.asset(
+                      "data/warning.jpeg",
+                      fit: BoxFit.fill,
+                    )
+                  : Image.network(
+                      "${recipe.recipeImg}",
+                      fit: BoxFit.fill,
+                    ),
             ),
 
             Divider(),
 
             //재료
-            Expanded(
-                flex: 1,
-                child: Text(
-                  "필요한 재료",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                )),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Text(
+                "필요한 재료",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
@@ -60,9 +67,20 @@ class RecipePage extends StatelessWidget {
             Divider(),
 
             //요리 열량
-            Text(
-              "열량",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Text(
+                "열량",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
             ),
 
             Row(
@@ -131,6 +149,21 @@ class RecipePage extends StatelessWidget {
             Divider(),
 
             //요리 과정
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Text(
+                "요리 과정",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ),
             //리스트뷰로 만들어야할듯
             Expanded(
               flex: 8,
