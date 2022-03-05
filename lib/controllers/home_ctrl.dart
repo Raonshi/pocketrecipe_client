@@ -5,7 +5,7 @@ class HomeCtrl extends GetxController {
   final _pageController = PageController().obs;
   get pageController => _pageController.value;
 
-  final _bottomIndex = 0.obs;
+  final _bottomIndex = 1.obs;
   set bottomIndex(val) => _bottomIndex.value = val;
   get bottomIndex => _bottomIndex.value;
 

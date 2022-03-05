@@ -1,17 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/controllers/community_ctrl.dart';
+import 'package:pocketrecipe_client/controllers/menu_ctrl.dart';
 
-class CommunityPage extends StatelessWidget {
-  CommunityPage({Key? key}) : super(key: key);
-  final controller = Get.put(CommunityCtrl());
+class MenuPage extends StatelessWidget {
+  MenuPage({Key? key}) : super(key: key);
+  final controller = Get.put(MenuCtrl());
 
   @override
   Widget build(BuildContext context) {
     // controller.recipeList.clear();
     // controller.getRecipeByDatabase(keyword: "SHOW_MY_RECIPE");
 
-    return Column();
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+        child: GridView.count(
+          mainAxisSpacing: 5.0,
+          crossAxisSpacing: 5.0,
+          crossAxisCount: 2,
+          children: <Widget>[
+            MenuItemWidget(
+              menuName: "korean_food".tr,
+              color: Colors.deepOrangeAccent,
+            ),
+            MenuItemWidget(
+              menuName: "chinese_food".tr,
+              color: Colors.greenAccent,
+            ),
+            MenuItemWidget(
+              menuName: "japanese_food".tr,
+              color: Colors.amberAccent,
+            ),
+            MenuItemWidget(
+              menuName: "western_food".tr,
+              color: Colors.purpleAccent,
+            ),
+            MenuItemWidget(
+              menuName: "chicken".tr,
+              color: Colors.orangeAccent,
+            ),
+            MenuItemWidget(
+              menuName: "pizza".tr,
+              color: Colors.redAccent,
+            ),
+            MenuItemWidget(
+              menuName: "dessert".tr,
+              color: Colors.lightGreenAccent,
+            ),
+            MenuItemWidget(
+              menuName: "snack".tr,
+              color: Colors.blueAccent,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MenuItemWidget extends StatelessWidget {
+  MenuItemWidget({Key? key, this.menuName, this.color}) : super(key: key);
+  final menuName;
+  final color;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridTile(
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(10),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            menuName,
+            style: TextStyle(fontSize: 30),
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/controllers/home_ctrl.dart';
-import 'package:pocketrecipe_client/ui/pages/community/community_page.dart';
+import 'package:pocketrecipe_client/ui/pages/menu/menu_page.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe/recipe_search_page.dart';
 import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
 
@@ -13,11 +13,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(
-          () => Text(
-            "${controller.appBarTitle[controller.bottomIndex]}".tr,
-            style: TextStyle(fontSize: 25),
-          ),
+        title: Text(
+          "pocket_recipe".tr,
+          style: TextStyle(fontSize: 25),
         ),
       ),
       body: PageView(
@@ -26,7 +24,7 @@ class HomePage extends StatelessWidget {
         onPageChanged: (value) => controller.bottomIndex = value,
         children: <Widget>[
           RecipeSearchPage(),
-          CommunityPage(),
+          MenuPage(),
           SettingPage(),
         ],
       ),
@@ -38,10 +36,12 @@ class HomePage extends StatelessWidget {
           },
           currentIndex: controller.bottomIndex,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: "검색"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.chat_bubble), label: "커뮤니티"),
-            BottomNavigationBarItem(icon: Icon(Icons.settings), label: "설정"),
+                icon: Icon(Icons.search), label: "recipe_search".tr),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.dashboard), label: "menu".tr),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: "setting".tr),
           ],
         ),
       ),
