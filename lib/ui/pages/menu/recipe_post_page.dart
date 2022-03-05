@@ -245,9 +245,9 @@ class RecipePost2 extends StatelessWidget {
             () => ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: controller.manualItemList.length,
+              itemCount: controller.recipe.manualList.length,
               itemBuilder: (BuildContext context, int index) {
-                return controller.manualItemList[index];
+                return ManualItemWidget();
               },
             ),
           ),
@@ -263,7 +263,7 @@ class RecipePost2 extends StatelessWidget {
               child: ElevatedButton(
                 style: buttonStyle,
                 onPressed: () {
-                  if (controller.manualItemList.length < 20) {
+                  if (controller.recipe.manualList.length < 20) {
                     controller.manualAdd();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -287,7 +287,7 @@ class RecipePost2 extends StatelessWidget {
               child: ElevatedButton(
                 style: buttonStyle,
                 onPressed: () {
-                  if (controller.manualItemList.length > 1) {
+                  if (controller.recipe.manualList.length > 1) {
                     controller.manualSub();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -373,6 +373,101 @@ class RecipePost2 extends StatelessWidget {
           ],
         ),
         Spacer(),
+      ],
+    );
+  }
+}
+
+class ManualItemWidget extends StatelessWidget {
+  ManualItemWidget({Key? key}) : super(key: key);
+
+  final controller = Get.find<RecipePostCtrl>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Flexible(
+          flex: 5,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            child: TextField(
+                cursorColor: Colors.lightGreen,
+                decoration: InputDecoration(
+                  hintText: "manual_item_hint".tr,
+                  border: outLineInputBorder,
+                  focusedBorder: outLineInputBorder,
+                ),
+                onChanged: (str) {}),
+          ),
+        ),
+
+        //사진 등록 시 아이콘이 변경되지 않음.
+        //위젯이 새로고침 안됨
+        Expanded(
+            flex: 2,
+            child: IconButton(
+              onPressed: () => Get.defaultDialog(
+                title: "이미지 가져오기",
+                content: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          //await controller.encodeImageFromCamera(99);
+                          await controller.encodeRecipeImage(true);
+                          // setState(() {
+                          //   if (widget.controller.recipe.value.recipeImg !=
+                          //       'Unknown') {
+                          //     icon = Icon(
+                          //       Icons.image_rounded,
+                          //     );
+                          //   }
+                          // });
+                          Navigator.pop(context);
+                        },
+                        iconSize: 100.0,
+                        icon: Icon(Icons.camera_alt_rounded),
+                      ),
+                      VerticalDivider(
+                        color: Colors.black45,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          //controller.encodeImageFromGallery(99);
+                          await controller.encodeRecipeImage(true);
+                          // setState(() {
+                          //   if (widget.controller.recipe.value.recipeImg !=
+                          //       'Unknown') {
+                          //     icon = Icon(
+                          //       Icons.image_rounded,
+                          //     );
+                          //   }
+                          // });
+                          Navigator.pop(context);
+                        },
+                        iconSize: 100.0,
+                        icon: Icon(Icons.image_rounded),
+                      ),
+                    ],
+                  ),
+                ),
+                cancelTextColor: Colors.lightGreen,
+                actions: [
+                  ElevatedButton(
+                    style: buttonStyle,
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("닫기"),
+                  ),
+                ],
+              ),
+              iconSize: 75.0,
+              icon: Icon(Icons.image_outlined),
+            )),
       ],
     );
   }

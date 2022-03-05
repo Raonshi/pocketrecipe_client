@@ -18,20 +18,22 @@ class RecipePostCtrl extends GetxController {
   final _recipe = Recipe().obs;
   get recipe => _recipe.value;
 
-  final _manualItemList = [ManualItem(), ManualItem()].obs;
+  final _manualItemList = [].obs;
   get manualItemList => _manualItemList.value;
 
   ///매뉴얼 항목 추가
   void manualAdd() {
-    ManualItem item = new ManualItem(
-        index: manualItemList.length == 0 ? 0 : manualItemList.length);
-    item.manual = '';
-    item.imageBase64 = 'Unknown';
-    manualItemList.add(item);
+    recipe.manualList.add('');
+    recipe.imageList.add('Unknown');
+    _recipe.refresh();
   }
 
   ///매뉴얼 항목 삭제
-  void manualSub() => manualItemList.removeLast();
+  void manualSub() {
+    recipe.manualList.removeLast();
+    recipe.imageList.removeLast();
+    _recipe.refresh();
+  }
 
   ///메뉴얼 이미지 바이트 코드 생성: 테스트 function
   ///isCam == true : 카메라 촬영
