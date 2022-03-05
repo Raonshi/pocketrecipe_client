@@ -19,6 +19,11 @@ class ApiService extends GetConnect {
 
   backendDelete(String url, RecipeListJson recipeList) {}
 
+  backendPut(String path, Recipe recipe) {
+    Uri url = Uri.http(_server, path);
+    return put(url.toString(), recipe.toJson('author'));
+  }
+
   openapiGet() {}
 
   openapiPost() {}

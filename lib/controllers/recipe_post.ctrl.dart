@@ -5,9 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pocketrecipe_client/etc/data_define.dart';
+import 'package:pocketrecipe_client/services/api_service.dart';
 import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
 
 class RecipePostCtrl extends GetxController {
+  final api = Get.find<ApiService>();
   final _postPageController = PageController(initialPage: 0).obs;
   get postpageController => _postPageController.value;
 
@@ -71,4 +73,7 @@ class RecipePostCtrl extends GetxController {
       return base64.encode(file.readAsBytesSync());
     }
   }
+
+  Future<bool> recipePosting() async =>
+      await api.backendPut('/insertRecipe', recipe);
 }
