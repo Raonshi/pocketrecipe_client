@@ -12,33 +12,36 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: Obx(
-                () => Text(controller.appBarTitle[controller.bottomIndex]))),
-        body: PageView(
-          controller: controller.pageController,
-          physics: NeverScrollableScrollPhysics(),
-          onPageChanged: (value) => controller.bottomIndex = value,
-          children: <Widget>[
-            RecipeSearchPage(),
-            CommunityPage(),
-            SettingPage(),
+      appBar: AppBar(
+        title: Obx(
+          () => Text(controller.appBarTitle[controller.bottomIndex]),
+        ),
+      ),
+      body: PageView(
+        controller: controller.pageController,
+        physics: NeverScrollableScrollPhysics(),
+        onPageChanged: (value) => controller.bottomIndex = value,
+        children: <Widget>[
+          RecipeSearchPage(),
+          CommunityPage(),
+          SettingPage(),
+        ],
+      ),
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          onTap: (value) {
+            controller.bottomIndex = value;
+            controller.pageController.jumpToPage(value);
+          },
+          currentIndex: controller.bottomIndex,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: "검색"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.chat_bubble), label: "커뮤니티"),
+            BottomNavigationBarItem(icon: Icon(Icons.settings), label: "설정"),
           ],
         ),
-        bottomNavigationBar: Obx(
-          () => BottomNavigationBar(
-            onTap: (value) {
-              controller.bottomIndex = value;
-              controller.pageController.jumpToPage(value);
-            },
-            currentIndex: controller.bottomIndex,
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.search), label: "검색"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.chat_bubble), label: "커뮤니티"),
-              BottomNavigationBarItem(icon: Icon(Icons.settings), label: "설정"),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }

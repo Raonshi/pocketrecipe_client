@@ -31,7 +31,11 @@ class RecipeSearchPage extends StatelessWidget {
                       controller: controller.searchController,
                       maxLines: 1,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), hintText: "요리명 / 요리재료"),
+                        border: OutlineInputBorder(),
+                        hintText: "요리명 / 요리재료",
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 10.0),
+                      ),
                       onSubmitted: (str) {
                         controller.getRecipeByKeyword();
                       },
@@ -41,13 +45,20 @@ class RecipeSearchPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ElevatedButton(
-                      onPressed: () {
-                        controller.getRecipeByKeyword();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Text("검색"),
-                      )),
+                    onPressed: () {
+                      controller.getRecipeByKeyword();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text(
+                        "검색",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
