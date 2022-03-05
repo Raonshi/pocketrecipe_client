@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:pocketrecipe_client/data_define.dart';
+import 'package:pocketrecipe_client/etc/data_define.dart';
 
 class ApiService extends GetConnect {
   //서버정보

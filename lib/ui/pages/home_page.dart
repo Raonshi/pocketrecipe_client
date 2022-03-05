@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Obx(
           () => Text(
-            controller.appBarTitle[controller.bottomIndex],
+            "${controller.appBarTitle[controller.bottomIndex]}".tr,
             style: TextStyle(fontSize: 25),
           ),
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/controllers/recipe_search_ctrl.dart';
-import 'package:pocketrecipe_client/data_define.dart';
+import 'package:pocketrecipe_client/etc/data_define.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe/recipe_page.dart';
 

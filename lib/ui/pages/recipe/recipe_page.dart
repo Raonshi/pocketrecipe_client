@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:pocketrecipe_client/data_define.dart';
+import 'package:pocketrecipe_client/etc/data_define.dart';
 
 class RecipePage extends StatelessWidget {
   RecipePage();

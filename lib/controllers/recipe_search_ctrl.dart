@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:pocketrecipe_client/data_define.dart';
+import 'package:pocketrecipe_client/etc/data_define.dart';
 import 'package:pocketrecipe_client/services/api_service.dart';
 import 'package:sprintf/sprintf.dart';
 

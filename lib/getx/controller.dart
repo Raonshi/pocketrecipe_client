@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/api.dart';
 import 'package:pocketrecipe_client/ui/widgets/manual_add_item.dart';
 import 'package:sprintf/sprintf.dart';
-import 'package:pocketrecipe_client/data_define.dart';
+import 'package:pocketrecipe_client/etc/data_define.dart';
 
 class Controller extends GetxController {
   ///Restful API 사용을 위한 인터넷 접속 객체
