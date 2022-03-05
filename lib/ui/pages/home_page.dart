@@ -12,8 +12,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(title: Text(controller.appBarTitle[controller.bottomIndex])),
+      appBar: AppBar(
+        title: Obx(
+          () => Text(
+            controller.appBarTitle[controller.bottomIndex],
+            style: TextStyle(fontSize: 25),
+          ),
+        ),
+      ),
       body: PageView(
         controller: controller.pageController,
         physics: NeverScrollableScrollPhysics(),
@@ -24,20 +30,20 @@ class HomePage extends StatelessWidget {
           SettingPage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) => controller.bottomIndex = value,
-        currentIndex: controller.bottomIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-          ),
-        ],
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          onTap: (value) {
+            controller.bottomIndex = value;
+            controller.pageController.jumpToPage(value);
+          },
+          currentIndex: controller.bottomIndex,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: "검색"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.chat_bubble), label: "커뮤니티"),
+            BottomNavigationBarItem(icon: Icon(Icons.settings), label: "설정"),
+          ],
+        ),
       ),
     );
   }

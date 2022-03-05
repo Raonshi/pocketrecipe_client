@@ -9,6 +9,6 @@ class HomeCtrl extends GetxController {
   set bottomIndex(val) => _bottomIndex.value = val;
   get bottomIndex => _bottomIndex.value;
 
-  final _appBarTitle = ["Recipe Search", "Community", "Settings"].obs;
+  final _appBarTitle = ["레시피 검색", "커뮤니티", "설정"].obs;
   get appBarTitle => _appBarTitle;
 }

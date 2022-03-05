@@ -1,9 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:pocketrecipe_client/controllers/setting_ctrl.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
 class SettingPage extends StatelessWidget {
+  SettingPage({Key? key}) : super(key: key);
+  final controller = Get.put(SettingCtrl());
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Divider(),
+        ListTile(
+          trailing: Icon(
+            Icons.login_rounded,
+            size: 50,
+          ),
+          title: Text("구글 로그인"),
+          onTap: () async {
+            Logger().d("로그인 call");
+          },
+        ),
+        Divider(),
+        ListTile(
+          title: Text("오픈소스 정보"),
+          onTap: () {
+            Get.to(OpenSourceInfoPage());
+          },
+        ),
+        Divider(),
+        ListTile(
+          title: Text("개발자 정보"),
+          subtitle: Text("sunwonsw95@gmail.com"),
+        ),
+        Divider(),
+        ListTile(
+          title: Text("버전 정보"),
+          subtitle: Text("Version 1.0.0"),
+        ),
+        Divider(),
+      ],
+    );
+  }
+}
+
+class Setting extends StatelessWidget {
   final controller = Get.put(Controller());
 
   @override
