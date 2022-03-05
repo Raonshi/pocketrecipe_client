@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/ui/pages/recipe_search/recipe_page.dart';
+import 'package:pocketrecipe_client/ui/pages/recipe/recipe_page.dart';
 import 'package:pocketrecipe_client/data_define.dart';
-
 
 class RecipeItem extends StatelessWidget {
   Recipe recipe;
@@ -25,10 +24,12 @@ class RecipeItem extends StatelessWidget {
           Expanded(
             flex: 4,
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Get.to(() => RecipePage(recipe));
               },
-              child: recipe.recipeImg == "Unknown" ? Image.asset("data/warning.jpeg") : Image.network("${recipe.recipeImg}"),
+              child: recipe.recipeImg == "Unknown"
+                  ? Image.asset("data/warning.jpeg")
+                  : Image.network("${recipe.recipeImg}"),
             ),
           ),
 
@@ -40,8 +41,12 @@ class RecipeItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                    child: Text(recipe.name, textAlign: TextAlign.center, maxLines: 1, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
-                ),
+                    child: Text(
+                  recipe.name,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                )),
               ],
             ),
           ),

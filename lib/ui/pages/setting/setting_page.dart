@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/getx/controller.dart';
 
 class SettingPage extends StatelessWidget {
   final controller = Get.put(Controller());
-
 
   @override
   Widget build(BuildContext context) {
@@ -13,66 +13,63 @@ class SettingPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Divider(),
-
         ListTile(
-          trailing: Icon(Icons.login_rounded, size: 50,),
-          title: Obx(() => Text(controller.isLogin.value ? "로그인되었습니다." : "카카오톡 로그인")),
+          trailing: Icon(
+            Icons.login_rounded,
+            size: 50,
+          ),
+          title: Obx(() => Text("구글 로그인")),
           onTap: () async {
-            await controller.kakaoLogin();
-            loginPopup(controller, context, controller.isLogin.value);
+            Logger().d("로그인 call");
           },
         ),
-
-
         Divider(),
-
         ListTile(
           title: Text("오픈소스 정보"),
-          onTap: (){
+          onTap: () {
             Get.to(OpenSourceInfoPage());
           },
         ),
-
         Divider(),
-
         ListTile(
           title: Text("개발자 정보"),
           subtitle: Text("sunwonsw95@gmail.com"),
         ),
-
         Divider(),
-
         ListTile(
           title: Text("버전 정보"),
           subtitle: Text("Version 1.0.0"),
         ),
-
         Divider(),
-
       ],
     );
   }
 
-
-  void loginPopup(Controller controller, BuildContext context, bool isLogin){
-    showDialog(context: context, builder: (BuildContext context){
-      return isLogin ? AlertDialog(
-        title: Text("로그인 성공"),
-        content: Text("로그인에 성공하였습니다."),
-        actions: [
-          ElevatedButton(onPressed: () => Navigator.pop(context), child: Text("닫기")),
-        ],
-      ) : AlertDialog(
-          title: Text("로그인 실패"),
-          content: Text("로그인에 실패하였습니다."),
-          actions: [
-            ElevatedButton(onPressed: () => Navigator.pop(context), child: Text("닫기")),
-          ]
-      );
-    });
+  void loginPopup(Controller controller, BuildContext context, bool isLogin) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return isLogin
+              ? AlertDialog(
+                  title: Text("로그인 성공"),
+                  content: Text("로그인에 성공하였습니다."),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("닫기")),
+                  ],
+                )
+              : AlertDialog(
+                  title: Text("로그인 실패"),
+                  content: Text("로그인에 실패하였습니다."),
+                  actions: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("닫기")),
+                    ]);
+        });
   }
 }
-
 
 class OpenSourceInfoPage extends StatelessWidget {
   const OpenSourceInfoPage({Key? key}) : super(key: key);
@@ -93,14 +90,15 @@ class OpenSourceInfoPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            title: Text("Kakao Login"),
-            subtitle: Column(
-              children: [
-                Text("kakao_flutter_sdk | dio | json_annotation", textAlign: TextAlign.left,),
-                Text("package_info | shared_preferences | platform", textAlign: TextAlign.left),
-              ]
-            )
-          ),
+              title: Text("Kakao Login"),
+              subtitle: Column(children: [
+                Text(
+                  "kakao_flutter_sdk | dio | json_annotation",
+                  textAlign: TextAlign.left,
+                ),
+                Text("package_info | shared_preferences | platform",
+                    textAlign: TextAlign.left),
+              ])),
           Divider(),
           ListTile(
             title: Text("HTTP"),
@@ -122,4 +120,3 @@ class OpenSourceInfoPage extends StatelessWidget {
     );
   }
 }
-
