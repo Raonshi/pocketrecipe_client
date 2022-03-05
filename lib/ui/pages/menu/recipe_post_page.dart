@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/controllers/recipe_post.ctrl.dart';
 import 'package:pocketrecipe_client/etc/style.dart';
 
@@ -222,6 +223,10 @@ class RecipeInfoInputWidget extends StatelessWidget {
             hintText: hint,
             border: outLineInputBorder,
             focusedBorder: outLineInputBorder,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 5.0,
+              horizontal: 10.0,
+            ),
           ),
           onChanged: onChanged,
         ),
@@ -240,14 +245,14 @@ class RecipePost2 extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Expanded(
-          flex: 14,
+          flex: 10,
           child: Obx(
             () => ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: controller.recipe.manualList.length,
               itemBuilder: (BuildContext context, int index) {
-                return ManualItemWidget();
+                return ManualItemWidget(index: index);
               },
             ),
           ),
@@ -308,7 +313,6 @@ class RecipePost2 extends StatelessWidget {
             Spacer(),
           ],
         ),
-        Spacer(),
         Row(
           children: [
             Padding(
@@ -372,16 +376,16 @@ class RecipePost2 extends StatelessWidget {
             ),
           ],
         ),
-        Spacer(),
+        Spacer(flex: 3),
       ],
     );
   }
 }
 
 class ManualItemWidget extends StatelessWidget {
-  ManualItemWidget({Key? key}) : super(key: key);
-
+  ManualItemWidget({Key? key, this.index}) : super(key: key);
   final controller = Get.find<RecipePostCtrl>();
+  final index;
 
   @override
   Widget build(BuildContext context) {
@@ -395,13 +399,18 @@ class ManualItemWidget extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
             child: TextField(
-                cursorColor: Colors.lightGreen,
-                decoration: InputDecoration(
-                  hintText: "manual_item_hint".tr,
-                  border: outLineInputBorder,
-                  focusedBorder: outLineInputBorder,
+              cursorColor: Colors.lightGreen,
+              decoration: InputDecoration(
+                hintText: "manual_item_hint".tr,
+                border: outLineInputBorder,
+                focusedBorder: outLineInputBorder,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 5.0,
+                  horizontal: 10.0,
                 ),
-                onChanged: (str) {}),
+              ),
+              onChanged: (str) => controller.recipe.manualList[index] = str,
+            ),
           ),
         ),
 
@@ -418,16 +427,7 @@ class ManualItemWidget extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () async {
-                          //await controller.encodeImageFromCamera(99);
                           await controller.encodeRecipeImage(true);
-                          // setState(() {
-                          //   if (widget.controller.recipe.value.recipeImg !=
-                          //       'Unknown') {
-                          //     icon = Icon(
-                          //       Icons.image_rounded,
-                          //     );
-                          //   }
-                          // });
                           Navigator.pop(context);
                         },
                         iconSize: 100.0,
@@ -438,16 +438,7 @@ class ManualItemWidget extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () async {
-                          //controller.encodeImageFromGallery(99);
                           await controller.encodeRecipeImage(true);
-                          // setState(() {
-                          //   if (widget.controller.recipe.value.recipeImg !=
-                          //       'Unknown') {
-                          //     icon = Icon(
-                          //       Icons.image_rounded,
-                          //     );
-                          //   }
-                          // });
                           Navigator.pop(context);
                         },
                         iconSize: 100.0,

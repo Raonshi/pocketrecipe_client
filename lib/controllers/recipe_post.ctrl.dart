@@ -56,7 +56,7 @@ class RecipePostCtrl extends GetxController {
         ? await picker.pickImage(source: ImageSource.camera) as XFile
         : await picker.pickImage(source: ImageSource.gallery) as XFile;
     String base64 = await imageToBase64(xFile: xFile);
-    recipe.value.recipeImg = base64;
+    recipe.recipeImg = base64;
   }
 
   ///이미지 파일을 base64코드로 변환
