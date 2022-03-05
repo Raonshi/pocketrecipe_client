@@ -20,7 +20,7 @@ class SettingPage extends StatelessWidget {
             Icons.login_rounded,
             size: 50,
           ),
-          title: Obx(() => Text("구글 로그인")),
+          title: Text("구글 로그인"),
           onTap: () async {
             Logger().d("로그인 call");
           },

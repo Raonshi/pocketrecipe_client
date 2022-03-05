@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pocketrecipe_client/ui/pages/home.dart';
+import 'package:pocketrecipe_client/ui/pages/home_page.dart';
 
 void main() {
   runApp(MyApp());

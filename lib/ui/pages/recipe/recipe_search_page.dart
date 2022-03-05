@@ -28,7 +28,7 @@ class RecipeSearchPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 8.0),
                     child: TextField(
-                      controller: controller.searchController.value,
+                      controller: controller.searchController,
                       maxLines: 1,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(), hintText: "요리명 / 요리재료"),
