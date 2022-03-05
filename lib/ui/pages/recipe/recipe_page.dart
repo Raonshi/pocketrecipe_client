@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:pocketrecipe_client/data_define.dart';
 
 class RecipePage extends StatelessWidget {
@@ -42,7 +43,7 @@ class RecipePage extends StatelessWidget {
                 ),
                 Text(
                   "+120k likes",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(fontSize: 14),
                 ),
                 Spacer(),
                 Text(
@@ -79,7 +80,7 @@ class RecipePage extends StatelessWidget {
                     child: Text(
                   recipe.parts,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -115,7 +116,7 @@ class RecipePage extends StatelessWidget {
                     child: Text(
                   "열량 : ${recipe.energy}",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -125,7 +126,7 @@ class RecipePage extends StatelessWidget {
                     child: Text(
                   "나트륨 : ${recipe.natrium}",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -141,7 +142,7 @@ class RecipePage extends StatelessWidget {
                     child: Text(
                   "탄수화물 : ${recipe.carbohydrate}",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -151,7 +152,7 @@ class RecipePage extends StatelessWidget {
                     child: Text(
                   "단백질 : ${recipe.protein}",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -161,7 +162,7 @@ class RecipePage extends StatelessWidget {
                     child: Text(
                   "지방 : ${recipe.fat}",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -196,13 +197,55 @@ class RecipePage extends StatelessWidget {
                   children: [
                     Divider(),
                     recipe.imageList.length > index
-                        ? (recipe.imageList[index] == "Unknown"
-                            ? Text("<이미지가 없습니다>")
-                            : Image.network("${recipe.imageList[index]}"))
-                        : Text("<이미지가 없습니다>"),
+                        ? (recipe.imageList[index] == ""
+                            ? Container(
+                                width: 350,
+                                height: 200,
+                                color: Colors.grey,
+                                child: Center(
+                                    child: Text(
+                                  "이미지가 없습니다",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                              )
+                            : Image.network(
+                                recipe.imageList[index],
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(child: Text("No Image")),
+                                fit: BoxFit.fill,
+                                scale: 0.5,
+                                filterQuality: FilterQuality.high,
+                              ))
+                        : Container(
+                            width: 350,
+                            height: 200,
+                            color: Colors.grey,
+                            child: Center(
+                                child: Text(
+                              "이미지가 없습니다",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            )),
+                          ),
                     recipe.manualList.length > index
-                        ? Text(recipe.manualList[index])
-                        : Text("<설명이 없습니다>"),
+                        ? (recipe.manualList[index] == ""
+                            ? Text(
+                                "설명이 없습니다",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                recipe.manualList[index],
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ))
+                        : Text(
+                            "설명이 없습니다",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                     Divider(),
                   ],
                 ),

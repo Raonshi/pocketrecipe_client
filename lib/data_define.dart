@@ -43,16 +43,7 @@ class Recipe {
   void setFat(String value) => this.fat = value;
   void setNa(String value) => this.natrium = value;
   void setManualList(List<dynamic> value) => this.manualList = value;
-  void setImageList(List<dynamic> value) {
-    for (int i = 0; i < value.length; i++) {
-      if (value[i] == "Unknown") {
-        imageList.add(value[i]);
-      } else {
-        imageList
-            .add("http://220.86.224.184:12000/image/view?filePath=" + value[i]);
-      }
-    }
-  }
+  void setImageList(List<dynamic> value) => this.imageList = value;
 
   Map<String, dynamic> toJson(String author) {
     return {
