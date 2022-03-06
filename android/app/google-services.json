@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "341325622654-ftblmibf69e9r56hjfik20a7nbnu84qj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raondev.pocketrecipe_client",
+            "certificate_hash": "446faee637f89b095e9de793df6ac1c5a67204e5"
+          }
+        },
+        {
           "client_id": "341325622654-mi5nrbagcjhsq7db185r3kesnvj4k02r.apps.googleusercontent.com",
           "client_type": 3
         }
