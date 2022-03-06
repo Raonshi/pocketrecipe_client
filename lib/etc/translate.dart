@@ -31,6 +31,7 @@ class Language extends Translations {
 
           //search input
           'search_hint': '요리명 / 요리재료',
+          'search_input_empty': '검색어를 입력해주세요.',
 
           //recipe post
           'recipe_name': '레시피 이름',
@@ -54,6 +55,9 @@ class Language extends Translations {
 
           //manual item
           'manual_item_hint': '메뉴얼 설명(100자 이내)',
+
+          //information
+          'info': '알림',
         },
       };
 }

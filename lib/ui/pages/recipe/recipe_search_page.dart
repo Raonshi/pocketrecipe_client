@@ -88,9 +88,6 @@ class _SearchWidget extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 5.0, horizontal: 10.0),
                 ),
-                onSubmitted: (str) {
-                  controller.getRecipeByKeyword();
-                },
               ),
             ),
           ),
@@ -99,6 +96,20 @@ class _SearchWidget extends StatelessWidget {
             child: ElevatedButton(
               style: buttonStyle,
               onPressed: () {
+                if (controller.searchController.text.replaceAll(' ', '') ==
+                    '') {
+                  Get.defaultDialog(
+                    title: "info".tr,
+                    content: Text('search_input_empty'.tr),
+                    actions: [
+                      ElevatedButton(
+                        style: buttonStyle,
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("닫기"),
+                      ),
+                    ],
+                  );
+                }
                 controller.getRecipeByKeyword();
               },
               child: Padding(
