@@ -19,27 +19,40 @@ class SettingPage extends StatelessWidget {
           trailing: Icon(
             Icons.login_rounded,
             size: 50,
+            color: Colors.black,
           ),
-          title: Text("구글 로그인"),
+          title: Text(
+            "구글 로그인",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           onTap: () async {
             Logger().d("로그인 call");
           },
         ),
         Divider(),
         ListTile(
-          title: Text("오픈소스 정보"),
+          title: Text(
+            "오픈소스 정보",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           onTap: () {
             Get.to(OpenSourceInfoPage());
           },
         ),
         Divider(),
         ListTile(
-          title: Text("개발자 정보"),
+          title: Text(
+            "개발자 정보",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           subtitle: Text("sunwonsw95@gmail.com"),
         ),
         Divider(),
         ListTile(
-          title: Text("버전 정보"),
+          title: Text(
+            "버전 정보",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           subtitle: Text("Version 1.0.0"),
         ),
         Divider(),

@@ -33,6 +33,13 @@ dependencies:
   sprintf: ^6.0.0
   image_picker: ^0.8.4+3
 
+  # Firebase Service
+  firebase_core: ^1.12.0
+  cloud_firestore: ^3.1.10
+  firebase_auth: ^3.3.9
+  firebase_storage: ^10.2.9
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

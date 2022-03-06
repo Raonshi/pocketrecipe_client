@@ -6,8 +6,10 @@ import 'package:pocketrecipe_client/etc/translate.dart';
 import 'package:pocketrecipe_client/ui/pages/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   final initBinding = Get.put(InitBindingCtrl());
   initBinding.createService();
+  initBinding.initService();
 
   runApp(MyApp());
 }

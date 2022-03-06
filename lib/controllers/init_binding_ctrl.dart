@@ -10,4 +10,8 @@ class InitBindingCtrl extends GetxController {
     //self-made services
     Get.put(ApiService());
   }
+
+  initService() {
+    Get.find<FirebaseService>().initService();
+  }
 }
