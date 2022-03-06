@@ -14,39 +14,42 @@ class RecipeSearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.searchResult.clear();
 
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            flex: 1,
-            child: _SearchWidget(),
-          ),
-          Expanded(
-            flex: 8,
-            child: Obx(
-              () => ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: controller.searchResult.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 10.0,
-                      ),
-                      child: InkWell(
-                        child: _RecipeItemWidget(
-                          recipe: controller.searchResult[index],
-                        ),
-                        onTap: () => Get.to(() => RecipePage(),
-                            arguments: controller.searchResult[index]),
-                      ),
-                    );
-                  }),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 1,
+              child: _SearchWidget(),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 8,
+              child: Obx(
+                () => ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: controller.searchResult.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 10.0,
+                        ),
+                        child: InkWell(
+                          child: _RecipeItemWidget(
+                            recipe: controller.searchResult[index],
+                          ),
+                          onTap: () => Get.to(() => RecipePage(),
+                              arguments: controller.searchResult[index]),
+                        ),
+                      );
+                    }),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

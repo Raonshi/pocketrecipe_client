@@ -216,7 +216,7 @@ class RecipePage extends StatelessWidget {
                                     Container(child: Text("No Image")),
                                 fit: BoxFit.fill,
                                 scale: 0.5,
-                                filterQuality: FilterQuality.high,
+                                filterQuality: FilterQuality.low,
                               ))
                         : Container(
                             width: 350,
