@@ -14,14 +14,17 @@ class RecipePostPage extends StatelessWidget {
       appBar: AppBar(title: Text("recipe_post".tr)),
       body: SafeArea(
         child: Obx(
-          () => PageView(
-            controller: controller.postpageController,
-            onPageChanged: (value) => controller.postPageIndex = value,
-            physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              RecipePost1(),
-              RecipePost2(),
-            ],
+          () => GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: PageView(
+              controller: controller.postpageController,
+              onPageChanged: (value) => controller.postPageIndex = value,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                RecipePost1(),
+                RecipePost2(),
+              ],
+            ),
           ),
         ),
       ),
@@ -34,174 +37,177 @@ class RecipePost1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        //레시피 이름
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            RecipeInfoInputWidget(
-              hint: 'recipe_name'.tr,
-              onChanged: (str) {
-                controller.recipe.value.setName(str);
-              },
-            ),
-          ],
-        ),
-
-        //완성 이미지 업로드
-        // -> 이미지 업로드시 아이콘이 변경되야함(현재 안됨)
-        Column(
-          children: [
-            IconButton(
-              constraints: BoxConstraints(),
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                // getImageDialog(context);
-                Get.defaultDialog(
-                  title: "이미지 가져오기",
-                  content: IntrinsicHeight(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            //await controller.encodeImageFromCamera(99);
-                            await controller.encodeRecipeImage(true);
-                            // setState(() {
-                            //   if (widget.controller.recipe.value.recipeImg !=
-                            //       'Unknown') {
-                            //     icon = Icon(
-                            //       Icons.image_rounded,
-                            //     );
-                            //   }
-                            // });
-                            Navigator.pop(context);
-                          },
-                          iconSize: 100.0,
-                          icon: Icon(Icons.camera_alt_rounded),
-                        ),
-                        VerticalDivider(
-                          color: Colors.black45,
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            //controller.encodeImageFromGallery(99);
-                            await controller.encodeRecipeImage(true);
-                            // setState(() {
-                            //   if (widget.controller.recipe.value.recipeImg !=
-                            //       'Unknown') {
-                            //     icon = Icon(
-                            //       Icons.image_rounded,
-                            //     );
-                            //   }
-                            // });
-                            Navigator.pop(context);
-                          },
-                          iconSize: 100.0,
-                          icon: Icon(Icons.image_rounded),
-                        ),
-                      ],
-                    ),
-                  ),
-                  cancelTextColor: Colors.lightGreen,
-                  actions: [
-                    ElevatedButton(
-                      style: buttonStyle,
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("닫기"),
-                    ),
-                  ],
-                );
-              },
-              iconSize: 150.0,
-              icon: Icon(Icons.image_outlined),
-            ),
-            Text('recipe_img'.tr),
-          ],
-        ),
-
-        //레시피 칼로리, 나트륨
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            RecipeInfoInputWidget(
-              hint: 'recipe_cal'.tr,
-              onChanged: (str) {
-                controller.recipe.value.setEnergy(str);
-              },
-            ),
-            RecipeInfoInputWidget(
-              hint: 'recipe_nat'.tr,
-              onChanged: (str) {
-                controller.recipe.value.setNat(str);
-              },
-            ),
-          ],
-        ),
-
-        //탄수화물
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            RecipeInfoInputWidget(
-              hint: 'recipe_car'.tr,
-              onChanged: (str) {
-                controller.recipe.value.setCar(str);
-              },
-            ),
-          ],
-        ),
-
-        //지방
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            RecipeInfoInputWidget(
-              hint: 'recipe_fat'.tr,
-              onChanged: (str) {
-                controller.recipe.value.setFat(str);
-              },
-            ),
-          ],
-        ),
-
-        //단백질
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            RecipeInfoInputWidget(
-              hint: 'recipe_pro'.tr,
-              onChanged: (str) {
-                controller.recipe.value.setPro(str);
-              },
-            ),
-          ],
-        ),
-
-        //다음 버튼
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: buttonStyle,
-                onPressed: () => controller.postpageController.jumpToPage(1),
-                child: Text('next'.tr),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          //레시피 이름
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              RecipeInfoInputWidget(
+                hint: 'recipe_name'.tr,
+                onChanged: (str) {
+                  controller.recipe.value.setName(str);
+                },
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+
+          //완성 이미지 업로드
+          // -> 이미지 업로드시 아이콘이 변경되야함(현재 안됨)
+          Column(
+            children: [
+              IconButton(
+                constraints: BoxConstraints(),
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  // getImageDialog(context);
+                  Get.defaultDialog(
+                    title: "이미지 가져오기",
+                    content: IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () async {
+                              //await controller.encodeImageFromCamera(99);
+                              await controller.encodeRecipeImage(true);
+                              // setState(() {
+                              //   if (widget.controller.recipe.value.recipeImg !=
+                              //       'Unknown') {
+                              //     icon = Icon(
+                              //       Icons.image_rounded,
+                              //     );
+                              //   }
+                              // });
+                              Navigator.pop(context);
+                            },
+                            iconSize: 100.0,
+                            icon: Icon(Icons.camera_alt_rounded),
+                          ),
+                          VerticalDivider(
+                            color: Colors.black45,
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              //controller.encodeImageFromGallery(99);
+                              await controller.encodeRecipeImage(true);
+                              // setState(() {
+                              //   if (widget.controller.recipe.value.recipeImg !=
+                              //       'Unknown') {
+                              //     icon = Icon(
+                              //       Icons.image_rounded,
+                              //     );
+                              //   }
+                              // });
+                              Navigator.pop(context);
+                            },
+                            iconSize: 100.0,
+                            icon: Icon(Icons.image_rounded),
+                          ),
+                        ],
+                      ),
+                    ),
+                    cancelTextColor: Colors.lightGreen,
+                    actions: [
+                      ElevatedButton(
+                        style: buttonStyle,
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("닫기"),
+                      ),
+                    ],
+                  );
+                },
+                iconSize: 150.0,
+                icon: Icon(Icons.image_outlined),
+              ),
+              Text('recipe_img'.tr),
+            ],
+          ),
+
+          //레시피 칼로리, 나트륨
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              RecipeInfoInputWidget(
+                hint: 'recipe_cal'.tr,
+                onChanged: (str) {
+                  controller.recipe.value.setEnergy(str);
+                },
+              ),
+              RecipeInfoInputWidget(
+                hint: 'recipe_nat'.tr,
+                onChanged: (str) {
+                  controller.recipe.value.setNat(str);
+                },
+              ),
+            ],
+          ),
+
+          //탄수화물
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              RecipeInfoInputWidget(
+                hint: 'recipe_car'.tr,
+                onChanged: (str) {
+                  controller.recipe.value.setCar(str);
+                },
+              ),
+            ],
+          ),
+
+          //지방
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              RecipeInfoInputWidget(
+                hint: 'recipe_fat'.tr,
+                onChanged: (str) {
+                  controller.recipe.value.setFat(str);
+                },
+              ),
+            ],
+          ),
+
+          //단백질
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              RecipeInfoInputWidget(
+                hint: 'recipe_pro'.tr,
+                onChanged: (str) {
+                  controller.recipe.value.setPro(str);
+                },
+              ),
+            ],
+          ),
+
+          //다음 버튼
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: buttonStyle,
+                  onPressed: () => controller.postpageController.jumpToPage(1),
+                  child: Text('next'.tr),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -376,7 +382,7 @@ class RecipePost2 extends StatelessWidget {
             ),
           ],
         ),
-        Spacer(flex: 3),
+        Spacer(flex: 2),
       ],
     );
   }
