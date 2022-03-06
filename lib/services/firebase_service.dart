@@ -34,6 +34,8 @@ class FirebaseService extends GetxService {
 
     if (!isLogin) {
       login();
+      user = FirebaseAuth.instance.currentUser;
+      Logger().d("<<==== Sign in Success ====>>");
     }
   }
 
@@ -50,10 +52,22 @@ class FirebaseService extends GetxService {
         accessToken: authentication?.accessToken,
         idToken: authentication?.idToken,
       );
-      final userAuth =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       Logger().d("<<==== GoogleSignIn Error ====>>");
+      Logger().d(e);
+    }
+  }
+
+  logout() async {
+    try {
+      await FirebaseAuth.instance.currentUser!.delete();
+      // await FirebaseAuth.instance.signOut();
+      isLogin = false;
+      Logger().d("<<==== Sign out Success ====>>");
+    } catch (e) {
+      Logger().d("<<==== Sign out Fail ====>>");
       Logger().d(e);
     }
   }

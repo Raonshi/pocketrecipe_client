@@ -21,12 +21,16 @@ class SettingPage extends StatelessWidget {
             size: 50,
             color: Colors.black,
           ),
-          title: Text(
-            "구글 로그인",
-            style: TextStyle(fontWeight: FontWeight.bold),
+          title: Obx(
+            () => Text(
+              controller.fire.isLogin ? "로그인 되어 있습니다." : "구글 로그인",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           onTap: () async {
-            Logger().d("로그인 call");
+            controller.fire.isLogin
+                ? controller.fire.logout()
+                : controller.fire.login();
           },
         ),
         Divider(),
