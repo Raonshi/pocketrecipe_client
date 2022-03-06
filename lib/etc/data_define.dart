@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class Recipe {
   String name = '';
   String recipeImg = '';
@@ -64,14 +66,14 @@ class Recipe {
   factory Recipe.fromJson(dynamic json) {
     return Recipe(
       name: json["RCP_NM"],
-      recipeImg: json['ATT_FILE_NO_MAIN'],
-      parts: json["RCP_PARTS_DTLS"],
+      recipeImg: json['ATT_FILE_NO_MAIN'] ?? '',
+      parts: json["RCP_PARTS_DTLS"] ?? '',
       energy: json['INFO_ENG'],
       carbohydrate: json['INFO_CAR'],
       protein: json['INFO_PRO'],
       fat: json['INFO_FAT'],
       natrium: json['INFO_NA'],
-      author: json['RCP_AUTHOR'] ?? "Unknown",
+      author: json['RCP_AUTHOR'] ?? "superCheif".tr,
     );
   }
 }

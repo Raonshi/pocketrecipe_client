@@ -20,10 +20,22 @@ class RecipeSearchCtrl extends GetxController {
     String keyword = searchController.text;
     final response =
         await api.backendGet('/search-recipe', {'keyword': keyword});
+    Logger().d(response);
 
-    Map<String, dynamic> json = jsonDecode(response);
-    final List list = json['COOKRCP01']['row'];
-    searchResult.addAll(list.map((item) {
+    final List opList = response['op_recipe'];
+    if (opList[0] != '') {
+      _getOpenRecipe(opList);
+    }
+    final List fsList = response['fs_recipe'];
+    if (fsList[0] != '') {
+      _getFirebaseRecipe(fsList);
+    }
+
+    Logger().d(searchResult);
+  }
+
+  _getOpenRecipe(List opList) {
+    searchResult.addAll(opList.map((item) {
       List manualList = [];
       List imageList = [];
       item.forEach((key, value) {
@@ -43,6 +55,14 @@ class RecipeSearchCtrl extends GetxController {
       recipe.setManualList(manualList);
       recipe.setImageList(imageList);
 
+      return recipe;
+    }).toList());
+  }
+
+  _getFirebaseRecipe(List fsList) {
+    searchResult.addAll(fsList.map((item) {
+      Recipe recipe = Recipe.fromJson(item);
+      recipe.setManualList(item['MANUALS']);
       return recipe;
     }).toList());
   }

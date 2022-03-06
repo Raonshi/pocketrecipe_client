@@ -156,9 +156,17 @@ class _RecipeItemWidget extends StatelessWidget {
             flex: 4,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: recipe.recipeImg == "Unknown"
-                  ? Image.asset(
-                      "data/warning.jpeg",
+              child: recipe.recipeImg == ""
+                  ? Container(
+                      color: Colors.grey,
+                      child: Center(
+                        child: Text(
+                          "no_image".tr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     )
                   : Image.network("${recipe.recipeImg}"),
             ),
@@ -185,7 +193,7 @@ class _RecipeItemWidget extends StatelessWidget {
                 ),
                 Divider(color: Color.fromARGB(0, 0, 0, 0)),
                 Text(
-                  "superCheif",
+                  recipe.author == '' ? "superCheif".tr : recipe.author,
                   maxLines: 1,
                   style: TextStyle(fontSize: 16),
                 ),
@@ -207,7 +215,7 @@ class _RecipeItemWidget extends StatelessWidget {
                     ),
                     Text(
                       "+120k likes",
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(fontSize: 13, color: Colors.grey),
                     ),
                     Offstage(),
                   ],

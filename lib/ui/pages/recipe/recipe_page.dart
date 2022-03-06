@@ -19,10 +19,15 @@ class RecipePage extends StatelessWidget {
           children: [
             //완성 이미지
             ClipRRect(
-              child: recipe.recipeImg == "Unknown"
-                  ? Image.asset(
-                      "data/warning.jpeg",
-                      fit: BoxFit.fill,
+              child: recipe.recipeImg == ""
+                  ? Container(
+                      color: Colors.grey,
+                      child: Center(
+                          child: Text(
+                        "no_image".tr,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )),
                     )
                   : Image.network(
                       "${recipe.recipeImg}",
@@ -47,7 +52,7 @@ class RecipePage extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  "superCheif",
+                  recipe.author == '' ? "superCheif" : recipe.author,
                   maxLines: 1,
                   style: TextStyle(fontSize: 14),
                 ),
@@ -204,7 +209,7 @@ class RecipePage extends StatelessWidget {
                                 color: Colors.grey,
                                 child: Center(
                                     child: Text(
-                                  "이미지가 없습니다",
+                                  "no_image".tr,
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -213,7 +218,7 @@ class RecipePage extends StatelessWidget {
                             : Image.network(
                                 recipe.imageList[index],
                                 errorBuilder: (context, error, stackTrace) =>
-                                    Container(child: Text("No Image")),
+                                    Container(child: Text("no_image".tr)),
                                 fit: BoxFit.fill,
                                 scale: 0.5,
                                 filterQuality: FilterQuality.low,
@@ -224,7 +229,7 @@ class RecipePage extends StatelessWidget {
                             color: Colors.grey,
                             child: Center(
                                 child: Text(
-                              "이미지가 없습니다",
+                              "no_image".tr,
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             )),
@@ -232,7 +237,7 @@ class RecipePage extends StatelessWidget {
                     recipe.manualList.length > index
                         ? (recipe.manualList[index] == ""
                             ? Text(
-                                "설명이 없습니다",
+                                "no_manual".tr,
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               )
@@ -242,7 +247,7 @@ class RecipePage extends StatelessWidget {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ))
                         : Text(
-                            "설명이 없습니다",
+                            "no_manual".tr,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),

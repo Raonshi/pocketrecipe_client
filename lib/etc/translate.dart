@@ -58,6 +58,11 @@ class Language extends Translations {
 
           //information
           'info': '알림',
+
+          //etc
+          'superCheif': '식품안전나라 제공',
+          'no_image': '이미지가 없습니다',
+          'no_manual': '설명이 없습니다',
         },
       };
 }
