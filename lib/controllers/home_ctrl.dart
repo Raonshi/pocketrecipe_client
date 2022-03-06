@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeCtrl extends GetxController {
-  final _pageController = PageController().obs;
+  final _pageController = PageController(initialPage: 1).obs;
   get pageController => _pageController.value;
 
-  final _bottomIndex = 0.obs;
+  final _bottomIndex = 1.obs;
   set bottomIndex(val) => _bottomIndex.value = val;
   get bottomIndex => _bottomIndex.value;
 
-  final _appBarTitle = ["Recipe Search", "Community", "Settings"].obs;
+  final _appBarTitle = ["recipe_search", "community", "setting"].obs;
   get appBarTitle => _appBarTitle;
 }
