@@ -51,7 +51,7 @@ class RecipePost1 extends StatelessWidget {
               RecipeInfoInputWidget(
                 hint: 'recipe_name'.tr,
                 onChanged: (str) {
-                  controller.recipe.value.setName(str);
+                  controller.recipe.setName(str);
                 },
               ),
             ],
@@ -65,7 +65,6 @@ class RecipePost1 extends StatelessWidget {
                 constraints: BoxConstraints(),
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  // getImageDialog(context);
                   Get.defaultDialog(
                     title: "이미지 가져오기",
                     content: IntrinsicHeight(
@@ -74,16 +73,7 @@ class RecipePost1 extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              //await controller.encodeImageFromCamera(99);
                               await controller.encodeRecipeImage(true);
-                              // setState(() {
-                              //   if (widget.controller.recipe.value.recipeImg !=
-                              //       'Unknown') {
-                              //     icon = Icon(
-                              //       Icons.image_rounded,
-                              //     );
-                              //   }
-                              // });
                               Navigator.pop(context);
                             },
                             iconSize: 100.0,
@@ -94,16 +84,7 @@ class RecipePost1 extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () async {
-                              //controller.encodeImageFromGallery(99);
                               await controller.encodeRecipeImage(true);
-                              // setState(() {
-                              //   if (widget.controller.recipe.value.recipeImg !=
-                              //       'Unknown') {
-                              //     icon = Icon(
-                              //       Icons.image_rounded,
-                              //     );
-                              //   }
-                              // });
                               Navigator.pop(context);
                             },
                             iconSize: 100.0,
@@ -137,13 +118,13 @@ class RecipePost1 extends StatelessWidget {
               RecipeInfoInputWidget(
                 hint: 'recipe_cal'.tr,
                 onChanged: (str) {
-                  controller.recipe.value.setEnergy(str);
+                  controller.recipe.setEnergy(str);
                 },
               ),
               RecipeInfoInputWidget(
                 hint: 'recipe_nat'.tr,
                 onChanged: (str) {
-                  controller.recipe.value.setNat(str);
+                  controller.recipe.setNat(str);
                 },
               ),
             ],
@@ -157,7 +138,7 @@ class RecipePost1 extends StatelessWidget {
               RecipeInfoInputWidget(
                 hint: 'recipe_car'.tr,
                 onChanged: (str) {
-                  controller.recipe.value.setCar(str);
+                  controller.recipe.setCar(str);
                 },
               ),
             ],
@@ -171,7 +152,7 @@ class RecipePost1 extends StatelessWidget {
               RecipeInfoInputWidget(
                 hint: 'recipe_fat'.tr,
                 onChanged: (str) {
-                  controller.recipe.value.setFat(str);
+                  controller.recipe.setFat(str);
                 },
               ),
             ],
@@ -185,7 +166,7 @@ class RecipePost1 extends StatelessWidget {
               RecipeInfoInputWidget(
                 hint: 'recipe_pro'.tr,
                 onChanged: (str) {
-                  controller.recipe.value.setPro(str);
+                  controller.recipe.setPro(str);
                 },
               ),
             ],
@@ -334,48 +315,10 @@ class RecipePost2 extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 style: buttonStyle,
-                onPressed: () async {
+                onPressed: () {
+                  Logger().d("<<==== POST ====>>");
                   //레시피 등록 절차 수행
-                  // bool isComplete = await controller.recipePosting();
-                  bool goToHome = false;
-
-                  // if (isComplete) {
-                  //   goToHome = await showDialog(
-                  //       context: context,
-                  //       builder: (BuildContext context) {
-                  //         return AlertDialog(
-                  //           title: Text("알림"),
-                  //           content: Text("레시피 등록이 완료되었습니다."),
-                  //           actions: [
-                  //             ElevatedButton(
-                  //               onPressed: () => Get.back(result: true),
-                  //               child: Text("닫기"),
-                  //             ),
-                  //           ],
-                  //         );
-                  //       });
-                  // } else {
-                  //   goToHome = await showDialog(
-                  //       context: context,
-                  //       builder: (BuildContext context) {
-                  //         return AlertDialog(
-                  //           title: Text("알림"),
-                  //           content: Text("레시피 등록이 실패하였습니다.\n 관리자에게 문의해주세요."),
-                  //           actions: [
-                  //             ElevatedButton(
-                  //               onPressed: () => Get.back(result: true),
-                  //               //onPressed: () => Navigator.pop(context, true),
-                  //               child: Text("닫기"),
-                  //             ),
-                  //           ],
-                  //         );
-                  //       });
-                  // }
-
-                  if (goToHome) {
-                    controller.manualItemList.clear();
-                    Get.back(result: true);
-                  }
+                  controller.recipePosting();
                 },
                 child: Text('post'.tr),
               ),
@@ -433,7 +376,7 @@ class ManualItemWidget extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () async {
-                          await controller.encodeRecipeImage(true);
+                          await controller.encodeManualImage(true, index);
                           Navigator.pop(context);
                         },
                         iconSize: 100.0,
@@ -444,7 +387,7 @@ class ManualItemWidget extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () async {
-                          await controller.encodeRecipeImage(true);
+                          await controller.encodeManualImage(false, index);
                           Navigator.pop(context);
                         },
                         iconSize: 100.0,

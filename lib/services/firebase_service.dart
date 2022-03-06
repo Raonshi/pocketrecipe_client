@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sprintf/sprintf.dart';
 
 class FirebaseService extends GetxService {
   final _isLogin = false.obs;
@@ -69,6 +71,24 @@ class FirebaseService extends GetxService {
     } catch (e) {
       Logger().d("<<==== Sign out Fail ====>>");
       Logger().d(e);
+    }
+  }
+
+  imageUpload(String base64, String path, int index) async {
+    try {
+      String dataUrl = 'data:image/png;base64,$base64';
+
+      await FirebaseStorage.instance
+          .ref("/recipe")
+          .child(path)
+          .child('MANUAL_IMG${sprintf("%02d", [index])}.png')
+          .putString(dataUrl, format: PutStringFormat.dataUrl);
+      Logger().d("<<==== Image Upload Done ====>>");
+      return true;
+    } catch (e) {
+      Logger().d("<<==== Image Upload Error ====>>");
+      Logger().d(e);
+      return false;
     }
   }
 }
