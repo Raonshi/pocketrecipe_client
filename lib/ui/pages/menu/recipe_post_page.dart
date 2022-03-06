@@ -11,7 +11,18 @@ class RecipePostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("recipe_post".tr)),
+      appBar: AppBar(
+        title: Text("recipe_post".tr),
+        leading: IconButton(
+            onPressed: () {
+              controller.recipeClear();
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
+      ),
       body: SafeArea(
         child: Obx(
           () => GestureDetector(
@@ -50,6 +61,7 @@ class RecipePost1 extends StatelessWidget {
             children: [
               RecipeInfoInputWidget(
                 hint: 'recipe_name'.tr,
+                cachedText: controller.recipe.name,
                 onChanged: (str) {
                   controller.recipe.setName(str);
                 },
@@ -104,7 +116,11 @@ class RecipePost1 extends StatelessWidget {
                   );
                 },
                 iconSize: 150.0,
-                icon: Icon(Icons.image_outlined),
+                icon: Obx(
+                  () => controller.recipe.recipeImg == ''
+                      ? Icon(Icons.image_outlined)
+                      : Icon(Icons.image),
+                ),
               ),
               Text('recipe_img'.tr),
             ],
@@ -117,12 +133,14 @@ class RecipePost1 extends StatelessWidget {
             children: [
               RecipeInfoInputWidget(
                 hint: 'recipe_cal'.tr,
+                cachedText: controller.recipe.energy,
                 onChanged: (str) {
                   controller.recipe.setEnergy(str);
                 },
               ),
               RecipeInfoInputWidget(
                 hint: 'recipe_nat'.tr,
+                cachedText: controller.recipe.natrium,
                 onChanged: (str) {
                   controller.recipe.setNat(str);
                 },
@@ -137,6 +155,7 @@ class RecipePost1 extends StatelessWidget {
             children: [
               RecipeInfoInputWidget(
                 hint: 'recipe_car'.tr,
+                cachedText: controller.recipe.carbohydrate,
                 onChanged: (str) {
                   controller.recipe.setCar(str);
                 },
@@ -151,6 +170,7 @@ class RecipePost1 extends StatelessWidget {
             children: [
               RecipeInfoInputWidget(
                 hint: 'recipe_fat'.tr,
+                cachedText: controller.recipe.fat,
                 onChanged: (str) {
                   controller.recipe.setFat(str);
                 },
@@ -165,6 +185,7 @@ class RecipePost1 extends StatelessWidget {
             children: [
               RecipeInfoInputWidget(
                 hint: 'recipe_pro'.tr,
+                cachedText: controller.recipe.protein,
                 onChanged: (str) {
                   controller.recipe.setPro(str);
                 },
@@ -194,17 +215,19 @@ class RecipePost1 extends StatelessWidget {
 }
 
 class RecipeInfoInputWidget extends StatelessWidget {
-  const RecipeInfoInputWidget({Key? key, this.hint, required this.onChanged})
+  const RecipeInfoInputWidget(
+      {Key? key, this.hint, required this.onChanged, required this.cachedText})
       : super(key: key);
   final hint;
   final void Function(String str) onChanged;
-
+  final String cachedText;
   @override
   Widget build(BuildContext context) {
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: TextField(
+          controller: TextEditingController(text: cachedText),
           cursorColor: Colors.lightGreen,
           decoration: InputDecoration(
             hintText: hint,
@@ -406,7 +429,11 @@ class ManualItemWidget extends StatelessWidget {
                 ],
               ),
               iconSize: 75.0,
-              icon: Icon(Icons.image_outlined),
+              icon: Obx(
+                () => controller.recipe.imageList[index] == ''
+                    ? Icon(Icons.image_outlined)
+                    : Icon(Icons.image),
+              ),
             )),
       ],
     );

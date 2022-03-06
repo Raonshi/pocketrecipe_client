@@ -1,14 +1,14 @@
 class Recipe {
-  String name = 'Unknown';
-  String recipeImg = 'Unknown';
-  String parts = 'Unknown';
+  String name = '';
+  String recipeImg = '';
+  String parts = '';
 
-  String energy = '0';
-  String natrium = '0';
-  String carbohydrate = '0';
-  String fat = '0';
-  String protein = '0';
-  String author = 'Unknown';
+  String energy = '';
+  String natrium = '';
+  String carbohydrate = '';
+  String fat = '';
+  String protein = '';
+  String author = '';
 
   List<dynamic> imageList = [];
   List<dynamic> manualList = [];
@@ -21,15 +21,15 @@ class Recipe {
   bool isUpdate;
 
   Recipe(
-      {this.name = 'Unknown',
-      this.recipeImg = 'Unknown',
-      this.parts = 'Unknown',
-      this.energy = '0',
-      this.carbohydrate = '0',
-      this.protein = '0',
-      this.fat = '0',
-      this.natrium = '0',
-      this.author = 'Unknown',
+      {this.name = '',
+      this.recipeImg = '',
+      this.parts = '',
+      this.energy = '',
+      this.carbohydrate = '',
+      this.protein = '',
+      this.fat = '',
+      this.natrium = '',
+      this.author = '',
       this.isFavorite = 0,
       this.isDelete = false,
       this.isUpdate = false});

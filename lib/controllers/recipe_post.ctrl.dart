@@ -22,11 +22,14 @@ class RecipePostCtrl extends GetxController {
 
   final _recipe = Recipe().obs;
   get recipe => _recipe.value;
+  set recipe(val) => _recipe.value = val;
+
+  recipeClear() => recipe = Recipe();
 
   ///매뉴얼 항목 추가
   void manualAdd() {
     recipe.manualList.add('');
-    recipe.imageList.add('Unknown');
+    recipe.imageList.add('');
     _recipe.refresh();
   }
 
@@ -47,6 +50,7 @@ class RecipePostCtrl extends GetxController {
         : await picker.pickImage(source: ImageSource.gallery) as XFile;
     String base64 = await imageToBase64(xFile: xFile);
     recipe.imageList[index] = base64;
+    _recipe.refresh();
   }
 
   ///레시피 완성 이미지 바이트 코드 생성: 테스트 function
@@ -59,13 +63,14 @@ class RecipePostCtrl extends GetxController {
         : await picker.pickImage(source: ImageSource.gallery) as XFile;
     String base64 = await imageToBase64(xFile: xFile);
     recipe.recipeImg = base64;
+    _recipe.refresh();
   }
 
   ///이미지 파일을 base64코드로 변환
   Future<String> imageToBase64({XFile? xFile}) async {
     //이미지가 없을 경우
     if (xFile == null) {
-      return "Unknown";
+      return '';
     }
     //이미지가 있을 경우
     else {
@@ -76,10 +81,11 @@ class RecipePostCtrl extends GetxController {
 
   //레시피 등록
   recipePosting() async {
-    bool isUpload = true;
     //먼저 이미지를 저장한다.
+    bool isUpload = await fire.imageUpload(recipe.recipeImg, recipe.name, 99);
+
     recipe.imageList.asMap().forEach((index, image) async {
-      if (image != 'Unknown' && isUpload) {
+      if (image != '' && isUpload) {
         isUpload = await fire.imageUpload(image, recipe.name, index);
       }
     });
