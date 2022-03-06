@@ -95,6 +95,16 @@ class RecipePostCtrl extends GetxController {
       Logger().d("<<==== Manual Image Upload Fail ====>>");
       return;
     }
-    await api.backendPut('/insert-recipe', recipe);
+    await api.backendPut('/insert-recipe', {
+      "recipe_name": recipe.name,
+      "recipe_parts": recipe.parts,
+      "recipe_energy": recipe.energy,
+      "recipe_cal": recipe.carbohydrate,
+      "recipe_pro": recipe.protein,
+      "recipe_fat": recipe.fat,
+      "recipe_nat": recipe.natrium,
+      "recipe_manual": recipe.manualList,
+      "recipe_author": fire.user.email,
+    });
   }
 }

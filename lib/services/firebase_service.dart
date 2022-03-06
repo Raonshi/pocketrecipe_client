@@ -30,6 +30,7 @@ class FirebaseService extends GetxService {
         Logger().d("User Sign-out");
       } else {
         isLogin = true;
+        user = FirebaseAuth.instance.currentUser;
         Logger().d("User Sign-in");
       }
     });
