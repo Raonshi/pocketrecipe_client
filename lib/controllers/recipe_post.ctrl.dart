@@ -104,7 +104,7 @@ class RecipePostCtrl extends GetxController {
       "recipe_fat": recipe.fat,
       "recipe_nat": recipe.natrium,
       "recipe_manual": recipe.manualList,
-      "recipe_author": fire.user.email,
+      "recipe_author": fire.user.displayName,
     });
   }
 }

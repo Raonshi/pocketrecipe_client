@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pocketrecipe_client/controllers/home_ctrl.dart';
 import 'package:pocketrecipe_client/ui/pages/menu/menu_page.dart';
+import 'package:pocketrecipe_client/ui/pages/menu/recipe_delete.dart';
 import 'package:pocketrecipe_client/ui/pages/menu/recipe_post_page.dart';
 import 'package:pocketrecipe_client/ui/pages/recipe/recipe_search_page.dart';
 import 'package:pocketrecipe_client/ui/pages/setting/setting_page.dart';
@@ -24,14 +25,34 @@ class HomePage extends StatelessWidget {
           SettingPage(),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       floatingActionButton: Obx(
         () => Visibility(
           visible: controller.bottomIndex == 0 ? true : false,
-          child: FloatingActionButton(
-            backgroundColor: Colors.lightGreen,
-            child: Icon(Icons.add, size: 35),
-            onPressed: () => Get.to(RecipePostPage()),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: FloatingActionButton(
+                  heroTag: 'post',
+                  mini: true,
+                  backgroundColor: Colors.lightGreen,
+                  child: Icon(Icons.add, size: 20),
+                  onPressed: () => Get.to(RecipePostPage()),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: FloatingActionButton(
+                  heroTag: 'edit',
+                  mini: true,
+                  backgroundColor: Colors.lightGreen,
+                  child: Icon(Icons.edit, size: 20),
+                  onPressed: () => Get.to(RecipeDeletePage()),
+                ),
+              ),
+            ],
           ),
         ),
       ),

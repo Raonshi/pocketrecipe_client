@@ -5,6 +5,7 @@ import 'package:pocketrecipe_client/etc/data_define.dart';
 class ApiService extends GetConnect {
   //서버정보
   final _server = GetPlatform.isAndroid ? "10.0.2.2:8080" : "localhost:8080";
+  // final _server = "35.224.114.22:8080";
 
   backendGet(String path, [Map<String, dynamic>? params]) async {
     Uri url = Uri.http(_server, path, params);

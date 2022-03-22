@@ -18,6 +18,7 @@ class Language extends Translations {
           'menu': '메뉴',
           'setting': '설정',
           'recipe_post': '레시피 등록',
+          'my_recipe': '나의 레시피',
 
           //menu
           'korean_food': '한식',
@@ -48,6 +49,7 @@ class Language extends Translations {
           'post': '등록',
           'manual_add': '메뉴얼 추가',
           'manual_sub': '메뉴얼 삭제',
+          'delete': '삭제',
 
           //sanck bar
           'manual_full': '더 이상 메뉴얼을 추가할 수 없습니다.',
